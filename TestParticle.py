@@ -6,6 +6,8 @@ Created on Tue Jan 16 14:21:56 2018
 @author: John
 """
 
+#Vad händer?
+
 from scipy import *
 from matplotlib import pyplot as plt
 
