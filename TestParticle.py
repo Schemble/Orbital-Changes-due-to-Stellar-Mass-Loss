@@ -101,31 +101,3 @@ class TestParticle:
     
 test=TestParticle(1, 1, 0, 0, 7)
 test.run(10, 0.001, animate=True)
-
-
-#fig = plt.figure()
-#ax = fig.add_subplot(111, autoscale_on=False, xlim=(-2, 2), ylim=(-2, 2))
-#ax.set_aspect('equal')
-#ax.grid()
-#
-#line, = ax.plot([], [], 'o', lw=2)
-#time_template = 'time = %.1fs'
-#time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
-#dt=0.05
-#
-#def init():
-#    line.set_data([], [])
-#    time_text.set_text('')
-#    return line, time_text
-#
-#
-#def animate(i):
-#    thisx = [0, test.xlist[i]]
-#    thisy = [0, test.ylist[i]]
-#    print(1)
-#    line.set_data(thisx, thisy)
-#    time_text.set_text(time_template % (i*dt))
-#    return line, time_text
-#
-#ani = animation.FuncAnimation(fig, animate, arange(1, len(test.ylist)),
-#                              interval=25)
