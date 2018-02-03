@@ -18,21 +18,28 @@ class TestParticle:
         
         G=4*pi**2
         
-        time=[0]
+        time=0
         self.t=time
+        self.tlist=[time]
         self.m=m
         self.m_init=m
+        self.mlist=[m]
         self.x=x
+        self.xlist=[x]
         self.y=y
+        self.ylist=[y]
         self.vx=vx
         self.vy=vy
-        self.v=[sqrt(self.vx**2+self.vy**2)]
+        self.v=sqrt(self.vx**2+self.vy**2)
+        self.vlist=[self.v]
         self.alpha=alpha
         self.beta=beta
-        self.r=[sqrt(self.x**2+self.y**2)]
+        self.r=sqrt(self.x**2+self.y**2)
+        self.rlist=[self.r]
         if circular==True:       
-            self.torb=2*pi*sqrt(self.r[0]**3/(G*m))
-            self.vy=sqrt(G*m/self.r[0])
+            self.torb=2*pi*sqrt(self.r**3/(G*m))
+            self.vy=sqrt(G*m/self.r)
+        self.v=sqrt(self.vx**2+self.vy**2)
         
         
     def timestep(self, h):
@@ -45,22 +52,21 @@ class TestParticle:
 
         self.vx=self.vx+ax*h
         self.vy=self.vy+ay*h
-        self.v.append(sqrt(self.vx**2+self.vy**2))
+        self.v=sqrt(self.vx**2+self.vy**2)
+        self.vlist.append(self.v)
         
         self.x=self.x+self.vx*h
         self.y=self.y+self.vy*h
         
         self.m-=self.alpha/(self.beta/h)*self.m_init
+        self.r=sqrt(self.x**2+self.y**2)
+        self.rlist.append(self.r)
         
-        self.r.append(sqrt(self.x**2+self.y**2))
-        
-        self.t.append(self.t[-1]+h)
+        self.tlist.append(self.t+h)
         
     def run(self, h, plot=False, animate=False):
 
         G=4*pi**2
-        self.xlist=[self.x]
-        self.ylist=[self.y]
 
         
         for n in range(int((self.beta*self.torb)/h)):
@@ -68,10 +74,6 @@ class TestParticle:
             self.xlist.append(self.x)
             self.ylist.append(self.y)
 
-        if sqrt(2*G*self.m/self.r[-1]) < self.v[-1]:
-            print('Unbound')
-        else:
-            print('bound')
         
         if plot==True:
             fig=plt.figure()
@@ -81,13 +83,14 @@ class TestParticle:
             plt.xlabel('x [AU]')
             plt.ylabel('y [AU]')
             ax.plot(0,0,'ro', self.xlist, self.ylist,'b-')
+            fig.savefig('Figures/TestParticle/TP_Orbit_a={}_b={}.png'.format(self.alpha,self.beta))
             fig.show()
         
         
         
         if animate==True:
             fig = plt.figure()
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, autoscale_on=False, xlim=(-2, 2), ylim=(-2, 2))
             ax.set_aspect('equal')
             ax.grid()
             
@@ -120,15 +123,32 @@ class TestParticle:
         
             self.ani = animation.FuncAnimation(fig, animate, arange(1, len(self.ylist), 10),
                                           interval=1, blit=True, init_func=init)
-            plt.show()
+            
+    def Bound(self):
+        G=4*pi**2
+        if 1/2*self.v**2-G*self.m/self.r <= 0:
+            return True
+        else:
+            return False
+    
+    def InstMLoss(self):
+        self.m-=self.alpha*self.m
         
+    def Orbit(self):
+        
+            
+            
+            
         
 m=1
 x=1
-test=TestParticle(m, x, alpha=0.9, beta=5, circular=True)
-test.run(0.0001,plot=1)
-print(test.v[-1]*4.74057172)
-plt.figure()
-plt.plot(test.t, test.r)
-#plt.ylim(ymax=2, ymin=-2)
-plt.show
+test=TestParticle(m, x, alpha=0.6, beta=0, circular=True)
+#test.run(0.0001,plot=1, animate=0)
+test.InstMLoss()
+print(test.Bound())
+#plt.figure()
+#plt.plot(test.t, test.r)
+##plt.ylim(ymax=2, ymin=-2)
+#plt.ylabel('Orbital Radius [AU]')
+#plt.xlabel('Time [yr]')
+#plt.show
