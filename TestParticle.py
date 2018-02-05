@@ -128,10 +128,14 @@ class TestParticle:
             
     def Bound(self):
         G=4*pi**2
-        if 1/2*self.v**2-G*self.m/self.r <= 0:
+        if self.Etot() <= 0:
             return True
         else:
             return False
+    
+    def Etot(self):
+        G=4*pi**2      
+        return 1/2*self.v**2-G*self.m/self.r
     
     def InstMLoss(self):
         self.m-=self.alpha*self.m
@@ -166,10 +170,5 @@ class TestParticle:
         fig.savefig('Figures/TestParticle/TP_orbit_a={}_b={}.png'.format(self.alpha,self.beta))
         fig.show()
     
-m=1
-x=1
-test=TestParticle(m, x, alpha=0.4, beta=0, circular=True)
-#test.run(0.0001,plot=1, animate=0)
-test.InstMLoss()
-test.Orbit(0.001)
+
 
