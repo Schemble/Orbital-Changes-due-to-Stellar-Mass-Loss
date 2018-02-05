@@ -42,7 +42,7 @@ class TestParticle:
         self.v=sqrt(self.vx**2+self.vy**2)
         
         
-    def timestep(self, h):
+    def timestep(self, h, m_loss=True):
         
         G=4*pi**2
         
@@ -58,11 +58,13 @@ class TestParticle:
         self.x=self.x+self.vx*h
         self.y=self.y+self.vy*h
         
-        self.m-=self.alpha/(self.beta/h)*self.m_init
         self.r=sqrt(self.x**2+self.y**2)
         self.rlist.append(self.r)
         
         self.tlist.append(self.t+h)
+        
+        if m_loss==True:
+            self.m-=self.alpha/(self.beta/h)*self.m_init
         
     def run(self, h, plot=False, animate=False):
 
@@ -83,7 +85,7 @@ class TestParticle:
             plt.xlabel('x [AU]')
             plt.ylabel('y [AU]')
             ax.plot(0,0,'ro', self.xlist, self.ylist,'b-')
-            fig.savefig('Figures/TestParticle/TP_Orbit_a={}_b={}.png'.format(self.alpha,self.beta))
+            fig.savefig('Figures/TestParticle/TP_Trajectory_a={}_b={}.png'.format(self.alpha,self.beta))
             fig.show()
         
         
@@ -126,29 +128,47 @@ class TestParticle:
             
     def Bound(self):
         G=4*pi**2
-        if 1/2*self.v**2-G*self.m/self.r <= 0:
+        if self.Etot() <= 0:
             return True
         else:
             return False
     
+    def Etot(self):
+        G=4*pi**2      
+        return 1/2*self.v**2-G*self.m/self.r
+    
     def InstMLoss(self):
         self.m-=self.alpha*self.m
         
-    def Orbit(self):
+    def Orbit(self, h):
         
-            
-            
-            
+        x_orb=[self.x]
+        y_orb=[self.y]
         
-m=1
-x=1
-test=TestParticle(m, x, alpha=0.6, beta=0, circular=True)
-#test.run(0.0001,plot=1, animate=0)
-test.InstMLoss()
-print(test.Bound())
-#plt.figure()
-#plt.plot(test.t, test.r)
-##plt.ylim(ymax=2, ymin=-2)
-#plt.ylabel('Orbital Radius [AU]')
-#plt.xlabel('Time [yr]')
-#plt.show
+        theta = arctan2(self.y, self.x)
+        if theta<0:
+            theta+=2*pi
+        
+        theta_p=theta
+        
+        while theta>=theta_p:
+            self.timestep(h, m_loss=0)
+            x_orb.append(self.x)
+            y_orb.append(self.y)
+            theta_p=theta
+            theta = arctan2(self.y, self.x)
+            if theta<0:
+                theta+=2*pi
+                    
+        fig=plt.figure()
+        ax=fig.add_subplot(111)
+        ax.set_aspect('equal')
+        ax.grid()
+        plt.xlabel('x [AU]')
+        plt.ylabel('y [AU]')
+        ax.plot(0,0,'ro', x_orb, y_orb,'b-')
+        fig.savefig('Figures/TestParticle/TP_orbit_a={}_b={}.png'.format(self.alpha,self.beta))
+        fig.show()
+    
+
+
