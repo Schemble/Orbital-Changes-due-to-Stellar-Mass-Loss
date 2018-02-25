@@ -14,7 +14,7 @@ from numpy import arange
 
 class TestParticle:
     
-    def __init__(self, m, x, y=0, vx=0, vy=0, alpha=None, beta=None, circular=False):
+    def __init__(self, m, x, y=0, vx=0, vy=0, x_s=0, y_s=0, alpha=None, beta=None, circular=False):
         
         G=4*pi**2
         
@@ -32,24 +32,29 @@ class TestParticle:
         self.vy=vy
         self.v=sqrt(self.vx**2+self.vy**2)
         self.vlist=[self.v]
+        self.x_s=x_s
+        self.y_s=y_s
         self.alpha=alpha
         self.beta=beta
-        self.r=sqrt(self.x**2+self.y**2)
+        self.r=sqrt((self.x-self.x_s)**2+(self.y-self.y_s)**2)
         self.rlist=[self.r]
         if circular==True:       
             self.torb=2*pi*sqrt(self.r**3/(G*m))
             self.vy=sqrt(G*m/self.r)
         self.v=sqrt(self.vx**2+self.vy**2)
         
-        
-    def timestep(self, h, m_loss=True):
+    
+    def Getr(self, x, y):
+        return sqrt((x-self.x_s)**2+(y-self.y_s)**2)
+    
+    def timestep(self, h, m_loss=0):
         
         G=4*pi**2
         
-        ax=-self.x*G*self.m/(sqrt(self.x**2+self.y**2)**3)
-        ay=-self.y*G*self.m/(sqrt(self.x**2+self.y**2)**3)
+        ax=-(self.x-self.x_s)*G*self.m/(self.r**3)
+        ay=-(self.y-self.y_s)*G*self.m/(self.r**3)
 
-
+        
         self.vx=self.vx+ax*h
         self.vy=self.vy+ay*h
         self.v=sqrt(self.vx**2+self.vy**2)
@@ -58,7 +63,7 @@ class TestParticle:
         self.x=self.x+self.vx*h
         self.y=self.y+self.vy*h
         
-        self.r=sqrt(self.x**2+self.y**2)
+        self.r=self.Getr(self.x, self.y)
         self.rlist.append(self.r)
         
         self.tlist.append(self.t+h)
@@ -84,7 +89,7 @@ class TestParticle:
             ax.grid()
             plt.xlabel('x [AU]')
             plt.ylabel('y [AU]')
-            ax.plot(0,0,'ro', self.xlist, self.ylist,'b-')
+            ax.plot(self.x_s,self.y_s,'ro', self.xlist, self.ylist,'b-')
             fig.savefig('Figures/TestParticle/TP_Trajectory_a={}_b={}.png'.format(self.alpha,self.beta))
             fig.show()
         
@@ -96,7 +101,7 @@ class TestParticle:
             ax.set_aspect('equal')
             ax.grid()
             
-            ax.plot(0,0, 'ro')
+            ax.plot(self.x_s, self.y_s,0, 'ro')
             
             track, = ax.plot([], [],'-')
             pos, = ax.plot([], [],'.')
@@ -140,12 +145,12 @@ class TestParticle:
     def InstMLoss(self):
         self.m-=self.alpha*self.m
         
-    def Orbit(self, h):
+    def Orbit(self, h, plot=False):
         
         x_orb=[self.x]
         y_orb=[self.y]
         
-        theta = arctan2(self.y, self.x)
+        theta = arctan2(self.y-self.y_s, self.x-self.x_s)
         if theta<0:
             theta+=2*pi
         
@@ -156,19 +161,20 @@ class TestParticle:
             x_orb.append(self.x)
             y_orb.append(self.y)
             theta_p=theta
-            theta = arctan2(self.y, self.x)
+            theta = arctan2(self.y-self.y_s, self.x-self.x_s)
             if theta<0:
                 theta+=2*pi
-                    
-        fig=plt.figure()
-        ax=fig.add_subplot(111)
-        ax.set_aspect('equal')
-        ax.grid()
-        plt.xlabel('x [AU]')
-        plt.ylabel('y [AU]')
-        ax.plot(0,0,'ro', x_orb, y_orb,'b-')
-        fig.savefig('Figures/TestParticle/TP_orbit_a={}_b={}.png'.format(self.alpha,self.beta))
-        fig.show()
+            
+        if plot==True:
+            fig=plt.figure()
+            ax=fig.add_subplot(111)
+            ax.set_aspect('equal')
+            ax.grid()
+            plt.xlabel('x [AU]')
+            plt.ylabel('y [AU]')
+            ax.plot(self.x_s, self.y_s,0,'ro', x_orb, y_orb,'b-')
+            fig.savefig('Figures/TestParticle/TP_orbit_a={}_b={}.png'.format(self.alpha,self.beta))
+            fig.show()
     
-
+        return x_orb, y_orb
 
