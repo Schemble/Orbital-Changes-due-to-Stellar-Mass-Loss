@@ -18,7 +18,8 @@ import scipy.optimize as op
 Find relation between critical alpha and varying beta
 '''
 
-beta=array([0, 0.1, 1, 10, 100, 1000, 10000])
+logbeta=arange(-1, 2, 0.5)
+beta=10**logbeta
 m=1
 x=1
 alpha=array([.1, .2, .3, .4, .5, .6, .7, .8, .9, 1])
@@ -61,10 +62,11 @@ for b in beta[1:]:
     Etot=[]
     for a in alpha:
         test=TP.TestParticle(m, x, circular=1, alpha=a, beta=b)
-        data.append(test.run(0.001, mloss=1))
-        Etot.append(data[-2][-1])
-
-
+        data.append(array(test.run(0.001, mloss=1)))
+        
+        Etot.append(data[-1][-2][-1])
+#
+#
 #        print('beta={}, alpha={} done'.format(b, a))
    
 #    model=odr.Model(logarithmic)
@@ -87,6 +89,7 @@ for b in beta[1:]:
 #    a_crit=op.brentq(f, 0, 1)
 #    alpha_crit.append(a_crit)
     plt.plot(alpha, Etot, '.', label=r'$\beta=${}'.format(b))
+    print(test.Etot(),test.r, test.v, test.m)
 #    plt.plot(xplot, yplot, label=r'$\beta={}$'.format(b))
 #plt.title(r'$\frac{x}{1-x}$ fit')
 plt.ylabel(r'$E_{tot}$')
