@@ -62,9 +62,9 @@ for b in beta[1:]:
     Etot=[]
     for a in alpha:
         test=TP.TestParticle(m, x, circular=1, alpha=a, beta=b)
-        data.append(array(test.run(0.001, mloss=1)))
+        test.runrk4()
         
-        Etot.append(data[-1][-2][-1])
+        Etot.append(test.Etot())
 #
 #
 #        print('beta={}, alpha={} done'.format(b, a))
