@@ -161,10 +161,12 @@ for alph1 in alpha1:
     for alph2 in alpha2:
         test=TP.TestParticle(alpha=alph1+alph2, beta=t, circular=1)
         test.runrk4()
-        e1=test.Orbit(0.001)[-1]
-        if e1 == 'Unbound':
+        data=test.Orbit(0.001)
+        if data == 'Unbound':
             e1=1
-        e[i, j]=e1
+            e[i, j]=e1
+        else:
+            e[i, j]=data[-1]
         j+=1
         print(i, j)
     i+=1
