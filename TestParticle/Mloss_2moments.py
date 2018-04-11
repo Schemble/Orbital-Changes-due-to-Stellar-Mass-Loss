@@ -143,8 +143,8 @@ plt.plot(X, Y, '--')
 plt.show()
 '''
 
-alpha1=arange(0, 0.4, 0.01)
-alpha2=arange(0, 0.4, 0.01)
+alpha1=arange(0, 0.5, 0.01)
+alpha2=arange(0, 0.5, 0.01)
 
 m=1
 
@@ -152,7 +152,7 @@ def analyticalA(alpha):
     return (alpha-1)/(2*alpha-1)
 
 
-e=zeros([len(alpha1), len(alpha2)])
+ec=zeros([len(alpha1), len(alpha2)])
 i=0
 for alph1 in alpha1:
     j=0
@@ -161,18 +161,19 @@ for alph1 in alpha1:
     for alph2 in alpha2:
         test=TP.TestParticle(alpha=alph1+alph2, beta=t, circular=1)
         test.runrk4()
-        data=test.Orbit(0.001)
+        data=test.Orbit(0.01)
         if data == 'Unbound':
             e1=1
-            e[i, j]=e1
+            ec[i, j]=e1
         else:
-            e[i, j]=data[-1]
+            ec[i, j]=data[-1]
         j+=1
         print(i, j)
     i+=1
 
-x, y = meshgrid(alph1, alph2)
-Z=e
+x, y = meshgrid(alpha1, alpha2)
+Z=ec
+
 im=plt.imshow(Z, origin='lower', extent=[0,0.5,0,0.5])
 cset=plt.contour(Z, arange(0, 1.1, 0.1), cmap=plt.cm.Greys, extent=[0,0.5,0,0.5])
 plt.xlabel(r'$\alpha_1$')
@@ -180,7 +181,6 @@ plt.ylabel(r'$\alpha_2$')
 plt.title('Eccentricity after two mass loss, Continuous')
 plt.colorbar(im)
 plt.show()    
-
 
 
 
