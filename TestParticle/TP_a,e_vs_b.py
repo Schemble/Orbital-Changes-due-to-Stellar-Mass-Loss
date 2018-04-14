@@ -13,7 +13,8 @@ from scipy.stats import linregress
 
 m=1
 x=1
-logbeta=arange(-1, 4, 0.25)
+logbeta=arange(-1, 2, 0.25)
+logbeta=arange(-3, 0, 0.1)
 beta=10**logbeta
 ac=[0.5077439990113547,
  0.51334646205679624,
@@ -39,31 +40,34 @@ SMA=[]
 E=[]
 alpha=arange(0.1, 1, 0.1)
 
-
+j=0
 for a in alpha:
     sma=[]
     e=[]
     i=0
     for b in beta:        
-        if a<ac[i]:
-            ex=TP.TestParticle(alpha=a, beta=b, circular=1)
-            ex.runrk4(0.001)
+#        if a<ac[i]:
+        ex=TP.TestParticle(alpha=a, beta=b, circular=1)
+        ex.runrk4()
+        SMa=ex.GetA()
+        if SMa != 'Unbound':               
             sma.append(ex.GetA())
+        
             e.append(ex.Orbit(0.001)[-1])
         i+=1
-        print(i)
+        print(j,i)
     SMA.append(sma)
     E.append(e)
-    
-plt.figure()
-plt.grid()
-plt.xscale('log')
-plt.xlabel(r'$\log(\beta)$')
-plt.ylabel(r'$a$')
-for i in range(len(SMA)):
-    plt.plot(beta[len(beta)-len(SMA[i]):], SMA[i], '.', label=r'$\alpha={:.1f}$'.format(alpha[i]))
-plt.legend()
-plt.show()
+    j+=1
+#plt.figure()
+#plt.grid()
+#plt.xscale('log')
+#plt.xlabel(r'$\log(\beta)$')
+#plt.ylabel(r'$a$')
+#for i in range(len(SMA)):
+#    plt.plot(beta[len(beta)-len(SMA[i]):], SMA[i], '.', label=r'$\alpha={:.1f}$'.format(alpha[i]))
+#plt.legend()
+#plt.show()
 
 plt.figure()
 plt.grid()
@@ -75,15 +79,15 @@ for i in range(len(SMA)):
 plt.legend()
 plt.show()
 
-plt.figure()
-plt.grid()
-plt.xscale('log')
-plt.xlabel(r'$\log(\beta)$')
-plt.ylabel(r'$e$')
-for i in range(len(E)):
-    plt.plot(beta[len(beta)-len(E[i]):], E[i], '.', label=r'$\alpha={:.1f}$'.format(alpha[i]))
-plt.legend()
-plt.show()
+#plt.figure()
+#plt.grid()
+#plt.xscale('log')
+#plt.xlabel(r'$\log(\beta)$')
+#plt.ylabel(r'$e$')
+#for i in range(len(E)):
+#    plt.plot(beta[len(beta)-len(E[i]):], E[i], '.', label=r'$\alpha={:.1f}$'.format(alpha[i]))
+#plt.legend()
+#plt.show()
 
 plt.figure()
 plt.grid()

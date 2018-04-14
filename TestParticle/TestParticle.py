@@ -345,7 +345,6 @@ def RK4(f, y0, t0, tf, tol):
                     h=tf-t
                 h *= S*min(tol/diff)**(1/4)
             i+=1
-            
 
 #        elif type(y0) is float or int:
 #            

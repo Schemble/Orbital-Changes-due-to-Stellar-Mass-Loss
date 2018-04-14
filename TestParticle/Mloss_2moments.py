@@ -143,6 +143,64 @@ plt.plot(X, Y, '--')
 plt.show()
 '''
 
+#alpha1=arange(0, 0.5, 0.01)
+#alpha2=arange(0, 0.5, 0.01)
+#
+#m=1
+#
+#def analyticalA(alpha):
+#    return (alpha-1)/(2*alpha-1)
+#
+#a=zeros([len(alpha1), len(alpha2)])
+#ec=zeros([len(alpha1), len(alpha2)])
+#i=0
+#for alph1 in alpha1:
+#    j=0
+#    a1=analyticalA(alph1)
+#    t=sqrt(a1**3/(m-alph1))/2
+#    for alph2 in alpha2:
+#        test=TP.TestParticle(alpha=alph1+alph2, beta=t, circular=1)
+#        test.runrk4()
+#        ac=test.GetA()
+#        if ac == 'Unbound':
+#            ac=0.1
+#            a[i, j]=ac
+#        else:
+#            a[i, j]=ac
+#        
+#        data=test.Orbit(0.01)
+#        if data == 'Unbound':
+#            e1=1
+#            ec[i, j]=e1
+#        else:
+#            ec[i, j]=data[-1]
+#        j+=1
+#        print(i, j)
+#    i+=1
+#
+#x, y = meshgrid(alpha1, alpha2)
+#
+#Ze=ec/analyticale(x, y)
+#plt.figure()
+#im=plt.imshow(Ze, origin='lower', extent=[0,0.5,0,0.5])
+##cset=plt.contour(Ze, arange(0, 5, 0.5), cmap=plt.cm.Greys, extent=[0,0.5,0,0.5])
+#plt.xlabel(r'$\alpha_1$')
+#plt.ylabel(r'$\alpha_2$')
+#
+#plt.colorbar(im)
+#plt.show()    
+#
+#Za=a/analyticala(x, y)
+#
+#plt.figure()
+#im=plt.imshow(Za, origin='lower', extent=[0,0.5,0,0.5])
+##cset=plt.contour(Za, arange(0, 1.1, 0.1), cmap=plt.cm.Greys, extent=[0,0.5,0,0.5])
+#plt.xlabel(r'$\alpha_1$')
+#plt.ylabel(r'$\alpha_2$')
+#
+#plt.colorbar(im)
+#plt.show()
+
 alpha1=arange(0, 0.5, 0.01)
 alpha2=arange(0, 0.5, 0.01)
 
@@ -151,36 +209,35 @@ m=1
 def analyticalA(alpha):
     return (alpha-1)/(2*alpha-1)
 
-
-ec=zeros([len(alpha1), len(alpha2)])
-i=0
-for alph1 in alpha1:
-    j=0
-    a1=analyticalA(alph1)
-    t=sqrt(a1**3/(m-alph1))/2
-    for alph2 in alpha2:
-        test=TP.TestParticle(alpha=alph1+alph2, beta=t, circular=1)
-        test.runrk4()
-        data=test.Orbit(0.01)
-        if data == 'Unbound':
-            e1=1
-            ec[i, j]=e1
-        else:
-            ec[i, j]=data[-1]
-        j+=1
-        print(i, j)
-    i+=1
+#
+#a=zeros([len(alpha1), len(alpha2)])
+#i=0
+#for alph1 in alpha1:
+#    j=0
+#    a1=analyticalA(alph1)
+#    t=sqrt(a1**3/(m-alph1))/2
+#    for alph2 in alpha2:
+#        test=TP.TestParticle(alpha=alph1+alph2, beta=t, circular=1)
+#        test.runrk4()
+#        ac=test.GetA()
+#        if ac == 'Unbound':
+#            ac=0
+#            a[i, j]=ac
+#        else:
+#            a[i, j]=ac
+#        j+=1
+#        print(i, j, ac)
+#    i+=1
 
 x, y = meshgrid(alpha1, alpha2)
-Z=ec
+
+Z=log10(a/analyticala(x, y))
 
 im=plt.imshow(Z, origin='lower', extent=[0,0.5,0,0.5])
-cset=plt.contour(Z, arange(0, 1.1, 0.1), cmap=plt.cm.Greys, extent=[0,0.5,0,0.5])
+cset=plt.contour(Z, arange(0, 3, 0.2), cmap=plt.cm.Greys, extent=[0,0.5,0,0.5])
 plt.xlabel(r'$\alpha_1$')
 plt.ylabel(r'$\alpha_2$')
-plt.title('Eccentricity after two mass loss, Continuous')
+
 plt.colorbar(im)
-plt.show()    
-
-
+plt.show()
 
