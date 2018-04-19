@@ -16,8 +16,9 @@ Simple orbit
 
 #test=TP.TestParticle(beta=100,circular=1)
 #print(test.Etot())
-#data=test.runrk4()
+#test.runrk4()
 #print(test.Etot())
+#
 #
 #fig=plt.figure()
 #ax=fig.add_subplot(111)
@@ -31,7 +32,7 @@ Simple orbit
 simple orbit mass loss
 '''
 
-test=TP.TestParticle(alpha=0.5, beta=100,circular=1)
+test=TP.TestParticle(alpha=0.5, beta=10000,circular=1)
 print(test.Etot())
 test.runrk4()
 print(test.Etot())
@@ -42,18 +43,20 @@ ax.set_aspect('equal')
 ax.grid()
 plt.plot(test.xlist, test.ylist)
 plt.show()
-
-test=TP.TestParticle(alpha=0.5, beta=100,circular=1)
-print(test.Etot())
-test.run(0.001, mloss=1)
-print(test.Etot())
-
-fig=plt.figure()
-ax=fig.add_subplot(111)
-ax.set_aspect('equal')
-ax.grid()
-plt.plot(test.xlist, test.ylist)
-plt.show()
+#
+#
+#
+#test2=TP.TestParticle(alpha=0.5, beta=100,circular=1)
+#print(test.Etot())
+#test2.run(0.001, mloss=1)
+#print(test.Etot())
+#
+#fig=plt.figure()
+#ax=fig.add_subplot(111)
+#ax.set_aspect('equal')
+#ax.grid()
+#plt.plot(test2.xlist, test2.ylist)
+#plt.show()
 
 #test=TP.TestParticle(alpha=0.5, beta=10000,circular=1)
 #print(test.Etot())
@@ -86,7 +89,7 @@ plt.show()
 '''
 E vs alpha
 '''
-#
+
 #logbeta=arange(-1, 2, 0.5)
 #beta=10**logbeta
 #beta=[0,0.1, 1,10,100]

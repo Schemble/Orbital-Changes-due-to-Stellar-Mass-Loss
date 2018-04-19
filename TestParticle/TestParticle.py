@@ -151,39 +151,39 @@ class TestParticle:
             
         return self.tlist, self.xlist, self.ylist, self.mlist, self.Elist, self.alist
      
-    def runrk4(self):
-        if self.alpha==None:
-            Y=[self.x, self.y, self.vx, self.vy]
-            tol=[0.1, 0.1, 0.1, 0.1]
-        else:
-            Y=[self.x, self.y, self.vx, self.vy, self.m]
-            tol=[0.1, 0.1, 0.1, 0.1, 0.1]
-        #steps=int((self.beta)/h)
-        data, self.tlist = RK4(self.__diff__, Y, 0, self.beta, tol=tol)
-        
-        if data[:, -1][-1]<0:
-
-            h=data[:,-1][-2]*self.beta/(self.alpha*self.m_init)
-            
-            corr=RK4step(self.__diff__, data[-2,:], h=h)
-            
-            data[-1]=corr[-1]
-            self.tlist[-1]=h
-        if self.alpha!=None:
-            self.mlist=data[:, -1]
-            self.m=self.mlist[-1]
-        self.xlist=data[:,0]
-        self.ylist=data[:,1]
-
-        self.x=self.xlist[-1]
-        self.y=self.ylist[-1]
-        self.rlist=sqrt(self.xlist**2+self.ylist**2)
-        self.r=self.rlist[-1]
-        self.vx=data[-1, 2]
-        self.vy=data[-1,3]
-        self.vlist=list(sqrt(data[:, 2]**2+data[:, 3]**2))
-        self.v=self.vlist[-1]
-        return self.mlist, self.xlist, self.ylist, self.vlist,  data
+#    def oldrunrk4(self):
+#        if self.alpha==None:
+#            Y=[self.x, self.y, self.vx, self.vy]
+#            tol=[0.1, 0.1, 0.1, 0.1]
+#        else:
+#            Y=[self.x, self.y, self.vx, self.vy, self.m]
+#            tol=[0.1, 0.1, 0.1, 0.1, 0.1]
+#        #steps=int((self.beta)/h)
+#        data, self.tlist = RK4(self.__diff__, Y, 0, self.beta, tol=tol)
+#        
+#        if data[-1][-1]<0 and self.alpha !=None:
+#
+#            h=data[-2][-1]*self.beta/(self.alpha*self.m_init)
+#            
+#            corr=RK4step(self.__diff__, data[-2], h=h)
+#            
+#            data[-1]=corr[-1]
+#            self.tlist[-1]=h
+#        if self.alpha!=None:
+#            self.mlist=data[:][ -1]
+#            self.m=self.mlist[-1]
+#        self.xlist=data[:][0]
+#        self.ylist=data[:][1]
+#
+#        self.x=self.xlist[-1]
+#        self.y=self.ylist[-1]
+#        self.rlist=sqrt(self.xlist**2+self.ylist**2)
+#        self.r=self.rlist[-1]
+#        self.vx=data[-1][2]
+#        self.vy=data[-1][3]
+#        self.vlist=list(sqrt(data[:][2]**2+data[:][3]**2))
+#        self.v=self.vlist[-1]
+#        return self.mlist, self.xlist, self.ylist, self.vlist,  data
     
 
     
@@ -275,10 +275,106 @@ class TestParticle:
             dvy=-(Y0[1]-self.y_s)*G*Y0[-1]/(((Y0[0]-self.x_s)**2+(Y0[1]-self.y_s)**2)**(3/2))
             return array([dx, dy, dvx, dvy, dm])
         
+    def RK4step(self, f, y0, h):
+        '''
+        f = differential equation(s)
+        y0 = starting value(s)
+        t0 = start time
+        tf = stop time
+        tol = tolerance
+        '''
+        
+        if type(y0) is list:
+            
+            y0=array(y0)
+        
+        
+        if type(y0) is numpy.ndarray:
+            
+            ylen=len(y0)
+                    
+            Y=array([ ylen*[0] for i in range(2) ], dtype=numpy.float)
+            Y[0]=y0
+    
+            k1=h*f(Y[0])
+            k2=h*f(Y[0]+k1/2)
+            k3=h*f(Y[0]+k2/2)
+            k4=h*f(Y[0]+k3)
+            Y[1]=(Y[0]+k1/6+k2/3+k3/3+k4/6)
+        
+    
+        else:
+            TypeError('y0 must be a list, array, integer or float')
+        
+        return Y
 
+    def runrk4(self):
+        t=self.t
+        tf=self.beta
+        h=0.001
+        S=1
+        
+        if self.beta==None or self.beta==0:
+            self.InstMLoss()
+            return
+        
+        if self.alpha==None:
+            Y=[self.x, self.y, self.vx, self.vy]
+            tol=[0.1, 0.1, 0.1, 0.1]
+        else:
+            Y=[self.x, self.y, self.vx, self.vy, self.m]
+            tol=[0.1, 0.1, 0.1, 0.1, 0.1]
+        while t<self.beta:
+            y=[]
+            
+            for h0 in [h, h/2]:
+                y.append(self.RK4step(self.__diff__, Y, h0)[-1])
+            
+            diff=abs(y[0]-y[1])
+            
+            if any(diff > tol):
+                
+                h = S*min(tol/diff)**(1/5)*h
+                if t+h>tf:
+                    h=tf-t
+                
+            
+                #print(shape(Y), shape(Y[i-1]+k1/6+k2/3+k3/3+k4/6))
+                
+                Y=self.RK4step(self.__diff__, Y, h)[-1]
+                
+                t+=h
+                
+                
+            else:
+                
+                t+=h
+                
+                
+                Y=y[0]
 
-
-
+                h *= S*min(tol/diff)**(1/4)
+                if t+h>tf:
+                    h=tf-t
+            
+            self.t=t
+            self.tlist.append(self.t)
+            self.x=Y[0]
+            self.xlist.append(self.x)
+            self.y=Y[1]
+            self.ylist.append(self.y)
+            self.vx=Y[2]
+            self.r=sqrt(self.x**2+self.y**2)
+            self.rlist.append(self.r)
+            self.vy=Y[3]
+            self.v=sqrt(self.vx**2+self.vy**2)
+            self.vlist.append(self.v)
+            if self.alpha != None:
+                self.m=Y[4]
+                self.mlist.append(self.m)
+            #print(h, t)
+        
+            
 def RK4(f, y0, t0, tf, tol):
     '''
     f = differential equation(s)
@@ -290,7 +386,7 @@ def RK4(f, y0, t0, tf, tol):
     
     
     
-    h=0.0001
+    h=0.001
     
     if type(y0) is list:
         
@@ -301,9 +397,9 @@ def RK4(f, y0, t0, tf, tol):
         
         ylen=len(y0)
                 
-        Y=array([ ylen*[0] ], dtype=numpy.float)
+        Y=[]
         
-        Y[0]=y0
+        Y.append(y0)
         
         t=t0
         tlist=[t]
@@ -311,6 +407,7 @@ def RK4(f, y0, t0, tf, tol):
         S=1
         while t<tf:
             y=[]
+            
             for h0 in [h, h/2]:
                 k1=h0*f(Y[i-1])
                 k2=h0*f(Y[i-1]+k1/2)
@@ -331,7 +428,8 @@ def RK4(f, y0, t0, tf, tol):
                 k4=h*f(Y[i-1]+k3)
             
                 #print(shape(Y), shape(Y[i-1]+k1/6+k2/3+k3/3+k4/6))
-                Y=concatenate((Y , [Y[i-1]+k1/6+k2/3+k3/3+k4/6]), axis=0)
+                
+                Y.append(Y[i-1]+k1/6+k2/3+k3/3+k4/6)
                 
                 t+=h
                 tlist.append(t)
@@ -340,7 +438,8 @@ def RK4(f, y0, t0, tf, tol):
                 
                 t+=h
                 tlist.append(t)
-                Y=concatenate((Y , [y[0]]), axis=0)
+                
+                Y.append(y[0])
                 if t+h>tf:
                     h=tf-t
                 h *= S*min(tol/diff)**(1/4)
@@ -361,49 +460,3 @@ def RK4(f, y0, t0, tf, tol):
     
     return Y, tlist
 
-def RK4step(f, y0, h):
-    '''
-    f = differential equation(s)
-    y0 = starting value(s)
-    t0 = start time
-    tf = stop time
-    tol = tolerance
-    '''
-    
-    if type(y0) is list:
-        
-        y0=array(y0)
-    
-    
-    if type(y0) is numpy.ndarray:
-        
-        ylen=len(y0)
-                
-        Y=array([ ylen*[0] for i in range(2) ], dtype=numpy.float)
-        Y[0]=y0
-        
-
-        
-
-
-        k1=h*f(Y[0])
-        k2=h*f(Y[0]+k1/2)
-        k3=h*f(Y[0]+k2/2)
-        k4=h*f(Y[0]+k3)
-        Y[1]=(Y[0]+k1/6+k2/3+k3/3+k4/6)
-        
-            
-#        elif type(y0) is float or int:
-#            
-#            Y=zeros(steps)
-#            
-#            Y[0]=y0
-#            
-#            for i in range(1, steps):
-#                
-#                Y[i]=Y[i-1]+h*f(Y[i-1])
-    
-    else:
-        TypeError('y0 must be a list, array, integer or float')
-    
-    return Y
