@@ -11,16 +11,14 @@ from scipy import*
 from matplotlib import pyplot as plt
 from scipy.stats import linregress
 
-fixed_beta=10**(arange(-2, 4.1, 0.25))
+fixed_beta=10**(arange(-2, 2.1, 0.5))
 fixed_alpha=arange(0.1,1,0.1)
 i=0
-
-alph=fixed_alpha[0]
-
 beta_list=[]
 alpha_list=[]
 a_list=[]
-tol=0.05
+e_list=[]
+tol=array([0.05, 0.007])
 
 S=0.95
 h_min=0.01
@@ -33,21 +31,28 @@ for alph in fixed_alpha:
         ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
         ex.runrk4()
         a=ex.GetA()
+        e=ex.GetEc()
         sma=[a]
+        ecc=[e]
         b_list=[b]
         alph_list=[alph]
         i+=1
-        h=0.1*b
+        h=0.01*b
     for beta in fixed_beta[i:]:
         b_max=beta
         ex=TP.TestParticle(alpha=alph, beta=b_max, circular=1)
+        
         ex.runrk4()
         af=ex.GetA()
+        
+        ef=ex.GetEc()
         a=sma[-1]
-        diff=abs(log10(a)-log10(af))
-        if diff<tol:
+        e=ecc[-1]
+        diff=array([abs(log10(a)-log10(af)), abs(e-ef)])
+        print(diff)
+        if all(diff<tol):
             b=b_max
-        elif diff>tol and h==0.1*fixed_beta[i-1]:
+        elif any(diff>tol) and h==0.1*fixed_beta[i-1]:
             h=0.1*b
         while b<b_max: 
             
@@ -56,13 +61,12 @@ for alph in fixed_alpha:
             for h0 in [h, h/2]:
                 
                 ex=TP.TestParticle(alpha=alph, beta=b+h0, circular=1)
-                ex.runrk4()
-                
-                y.append(ex.GetA())
-            diff=abs(log10(y[0])-log10(y[1]))
+                ex.runrk4()                
+                y.append(array([ex.GetA(), ex.GetEc()]))
+            diff=array([abs(log10(y[0][0])-log10(y[1][0])), abs(y[0][1]-y[1][1])])
             
-            if diff>tol:
-                h *= S*(tol/diff)**(1/5)
+            if any(diff>tol):
+                h *= S*min(tol/diff)**(1/5)
                 if b+h>b_max:
                     b=b_max
                     break
@@ -70,6 +74,7 @@ for alph in fixed_alpha:
                 ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
                 ex.runrk4()
                 sma.append(ex.GetA())
+                ecc.append(ex.GetEc())
                 b_list.append(b)
                 alph_list.append(alph)
                 if b+h>b_max:
@@ -77,22 +82,27 @@ for alph in fixed_alpha:
                     break
                     
             else:
-                sma.append(y[0])
-                b+=h
-                b_list.append(b)
-                alph_list.append(alph)
-                h *= S*(tol/diff)**(1/4)
                 if b+h>b_max:
                     b=b_max
                     break
-
+                sma.append(y[0][0])
+                ecc.append(y[0][1])
+                b+=h
+                b_list.append(b)
+                alph_list.append(alph)
+                h *= S*min(tol/diff)**(1/4)
+                
+                
         sma.append(af)
+        ecc.append(ef)
         b_list.append(b)
         alph_list.append(alph)
         print(alph, b)
     a_list.append(sma)
     beta_list.append(b_list)
     alpha_list.append(alph_list)
+    e_list.append(ecc)
+
 plt.figure()
 plt.grid()
 plt.xscale('log')
@@ -104,29 +114,38 @@ for i in range(len(a_list)):
 plt.legend()
 plt.show()
 
-
-
-an_list=[]
-alphn_list=[]
-for b in fixed_beta:
-    ann_list=[]
-    alphnn_list=[]
-    for i in range(len(a_list)):
-        if any(beta_list[i]==b):
-            ann_list.append(a_list[i][beta_list[i].index(b)])
-            alphnn_list.append(alpha_list[i][beta_list[i].index(b)])
-    an_list.append(ann_list)
-    alphn_list.append(alphnn_list)
-
 plt.figure()
 plt.grid()
-plt.yscale('log')
-plt.xlabel(r'$\alpha$')
-plt.ylabel(r'$a$')
-for i in range(len(an_list)):
-    plt.plot(alphn_list[i], an_list[i], '.-', label=r'$beta={}$'.format(fixed_beta[i]))
-#plt.legend()
+plt.xscale('log')
+plt.xlabel(r'$\beta$')
+plt.ylabel(r'$e$')
+for i in range(len(e_list)):
+    plt.plot(beta_list[i], e_list[i], '.-', label=r'$\alpha={:.1f}$'.format(fixed_alpha[i]))
+plt.legend()
 plt.show()
+
+
+#an_list=[]
+#alphn_list=[]
+#for b in fixed_beta:
+#    ann_list=[]
+#    alphnn_list=[]
+#    for i in range(len(a_list)):
+#        if any(beta_list[i]==b):
+#            ann_list.append(a_list[i][beta_list[i].index(b)])
+#            alphnn_list.append(alpha_list[i][beta_list[i].index(b)])
+#    an_list.append(ann_list)
+#    alphn_list.append(alphnn_list)
+#
+#plt.figure()
+#plt.grid()
+#plt.yscale('log')
+#plt.xlabel(r'$\alpha$')
+#plt.ylabel(r'$a$')
+#for i in range(len(an_list)):
+#    plt.plot(alphn_list[i], an_list[i], '.-', label=r'$beta={}$'.format(fixed_beta[i]))
+##plt.legend()
+#plt.show()
     
 
 

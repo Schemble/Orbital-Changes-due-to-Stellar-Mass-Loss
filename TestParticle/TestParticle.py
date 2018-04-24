@@ -19,7 +19,7 @@ G=4*pi**2
 
 class TestParticle:
     
-    def __init__(self, m=1, x=1, y=0, vx=0, vy=0, x_s=0, y_s=0, alpha=None, beta=None, circular=False):
+    def __init__(self, m=1, x=1, y=0, vx=0, vy=0, x_s=0, y_s=0, alpha=None, beta=None, circular=True):
         
         G=4*pi**2
         
@@ -208,7 +208,7 @@ class TestParticle:
         
         if self.Etot()>0:
            print('Unbound')
-           return 'Unbound'
+           return inf
         
         x_orb=[self.x]
         y_orb=[self.y]
@@ -229,17 +229,7 @@ class TestParticle:
             if dtheta<0:
                 dtheta+=2*pi
             
-            
-        if plot==True:
-            fig=plt.figure()
-            ax=fig.add_subplot(111)
-            ax.set_aspect('equal')
-            ax.grid()
-            plt.xlabel('x [AU]')
-            plt.ylabel('y [AU]')
-            ax.plot(self.x_s, self.y_s,0,'ro', x_orb, y_orb,'b-')
-            fig.savefig('Figures/TestParticle/TP_orbit_a={}_b={}.png'.format(self.alpha,self.beta))
-            fig.show()
+
             
         a=(max(r_orb)+min(r_orb))/2
         e=1-min(r_orb)/a
@@ -258,7 +248,17 @@ class TestParticle:
             
             return -G*self.m/(2*E)
         else:
-            return 'Unbound'
+            return inf
+        
+    def GetEc(self):
+        L=cross([self.x, self.y, 0], [self.vx, self.vy, 0])
+        L2=L[0]**2+L[1]**2+L[2]**2
+        e=sqrt(1+(2*self.Etot()*L2)/(G*self.m)**2)
+        if e < 1:
+            return e
+        else:
+            return e
+    
     def __diff__(self, Y0):
         
         if self.alpha==None:
@@ -308,22 +308,28 @@ class TestParticle:
         
         return Y
 
-    def runrk4(self):
+    def runrk4(self, orbit=False, ubbreak=0):
+        
+        if (self.beta==None or self.beta==0) and orbit==False:
+            self.InstMLoss()
+            return
+        if orbit==True:
+            beta_i=self.beta
+            self.beta=float('inf')
+        if self.alpha==None or orbit==True:
+            Y=array([self.x, self.y, self.vx, self.vy])
+            tol=[0.1, 0.1, 0.1, 0.1]
+            dtheta=0
+            dtheta_p=0
+        else:
+            Y=array([self.x, self.y, self.vx, self.vy, self.m])
+            tol=[0.1, 0.1, 0.1, 0.1, 0.1]
+            
         t=self.t
         tf=self.beta
         h=0.001
         S=1
-        
-        if self.beta==None or self.beta==0:
-            self.InstMLoss()
-            return
-        
-        if self.alpha==None:
-            Y=[self.x, self.y, self.vx, self.vy]
-            tol=[0.1, 0.1, 0.1, 0.1]
-        else:
-            Y=[self.x, self.y, self.vx, self.vy, self.m]
-            tol=[0.1, 0.1, 0.1, 0.1, 0.1]
+        theta_i=self.Theta()
         while t<self.beta:
             y=[]
             
@@ -331,10 +337,10 @@ class TestParticle:
                 y.append(self.RK4step(self.__diff__, Y, h0)[-1])
             
             diff=abs(y[0]-y[1])
-            
+
             if any(diff > tol):
                 
-                h = S*min(tol/diff)**(1/5)*h
+                h *= S*min(tol/diff)**(1/5)
                 if t+h>tf:
                     h=tf-t
                 
@@ -352,7 +358,6 @@ class TestParticle:
                 
                 
                 Y=y[0]
-
                 h *= S*min(tol/diff)**(1/4)
                 if t+h>tf:
                     h=tf-t
@@ -369,12 +374,21 @@ class TestParticle:
             self.vy=Y[3]
             self.v=sqrt(self.vx**2+self.vy**2)
             self.vlist.append(self.v)
+            self.theta=self.Theta()
             if self.alpha != None:
                 self.m=Y[4]
                 self.mlist.append(self.m)
-            #print(h, t)
-        
+            if ubbreak== True and self.Unbound()==True:
+                break
+            if orbit==True:
+                dtheta_p=dtheta
+                dtheta = self.Theta()-theta_i
+                if dtheta<0:
+                    dtheta+=2*pi
             
+                if dtheta<=dtheta_p:
+                    self.beta=beta_i
+                    break
 def RK4(f, y0, t0, tf, tol):
     '''
     f = differential equation(s)
