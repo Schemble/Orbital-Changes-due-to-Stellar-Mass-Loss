@@ -14,7 +14,7 @@ a_list=[]
 e_list=[]
 E_list=[]
 th_list=[]
-with open('big_data_incomp.csv') as f:
+with open('grid_data.csv') as f:
     for line in f.readlines():
         l=line.split(',')
         alph_list.append(float(l[0]))
@@ -30,6 +30,9 @@ e_list=array(e_list)
 E_list=array(E_list)
 th_list=array(th_list)
 
+for i in range(len(e_list)):
+    if e_list[i]>1:
+        e_list[i]=inf
 
 
 alph_uniq=list(set(alph_list))
@@ -46,6 +49,38 @@ for alph in alph_uniq:
 
 plt.xlabel(r'$\beta$')
 plt.ylabel(r'$a$')
+plt.show()
+
+beta_uniq=list(set(beta_list))
+plt.figure()
+plt.grid()
+for b in beta_uniq:
+    alph_plot=[]
+    a_plot=[]
+    indices = [i for i, x in enumerate(beta_list) if x == b]
+    for j in indices:
+        alph_plot.append(alph_list[j])
+        a_plot.append(a_list[j])
+    plt.plot(alph_plot, a_plot, '.-')
+
+plt.xlabel(r'$\alpha$')
+plt.ylabel(r'$a$')
+plt.show()
+
+beta_uniq=list(set(beta_list))
+plt.figure()
+plt.grid()
+for b in beta_uniq:
+    alph_plot=[]
+    e_plot=[]
+    indices = [i for i, x in enumerate(beta_list) if x == b]
+    for j in indices:
+        alph_plot.append(alph_list[j])
+        e_plot.append(e_list[j])
+    plt.plot(alph_plot, e_plot, '.-')
+
+plt.xlabel(r'$\alpha$')
+plt.ylabel(r'$e$')
 plt.show()
 
 alph_uniq=list(set(alph_list))
