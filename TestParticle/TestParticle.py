@@ -327,7 +327,7 @@ class TestParticle:
             
         t=self.t
         tf=self.beta
-        h=0.001
+        h=0.0001
         S=1
         theta_i=self.Theta()
         while t<self.beta:

@@ -76,10 +76,10 @@ simple orbit mass loss
 #plt.show()
 
 
-test=TP.TestParticle(alpha=0.5, beta=10000, circular=1)
+test=TP.TestParticle(alpha=0.85808885965525894, beta=16.595869074375681, circular=1)
 #print(test.Etot())
 test.runrk4()
-#print(test.Etot())
+print(test.Etot())
 
 fig=plt.figure()
 ax=fig.add_subplot(111)
@@ -87,19 +87,19 @@ ax.set_aspect('equal')
 ax.grid()
 plt.plot(test.xlist, test.ylist)
 plt.show()
-#
-#test=TP.TestParticle(alpha=0.5, beta=10000,circular=1)
-#print(test.Etot())
-#test.run(0.001, mloss=1)
-#print(test.Etot())
-#
-#fig=plt.figure()
-#ax=fig.add_subplot(111)
-#ax.set_aspect('equal')
-#ax.grid()
-#plt.plot(test.xlist, test.ylist)
-#plt.show()
 
+
+test=TP.TestParticle(alpha=0.859375, beta=16.595869074375681, circular=1)
+#print(test.Etot())
+test.runrk4()
+print(test.Etot())
+
+fig=plt.figure()
+ax=fig.add_subplot(111)
+ax.set_aspect('equal')
+ax.grid()
+plt.plot(test.xlist, test.ylist)
+plt.show()
 
 
 
