@@ -331,7 +331,7 @@ more alpha around 0.5
 '''
 Precision e
 '''
-tol=0.2
+tol=0.01
 S=0.95
 print(alph_uniq)
 for alph in alph_uniq:
@@ -340,7 +340,7 @@ for alph in alph_uniq:
 
     for j in range(len(indices)-1):
         
-        if abs(log10(e_grid[indices[j]])-log10(e_grid[indices[j+1]]))>tol:
+        if abs(e_grid[indices[j]]-e_grid[indices[j+1]])>tol:
             a=a_grid[indices[j]]
             e=e_grid[indices[j]]
             b=beta_grid[indices[j]]
@@ -385,7 +385,7 @@ for alph in alph_uniq:
                     h *= S*(tol/diff)**(1/4)
                 print(alph, b)
 
-with open('extra_e_data.csv', 'w') as f:
+with open('extra_e_data2.csv', 'w') as f:
     for i in range(len(alph_list)):
         out_string=''
         out_string+=str(alph_list[i])

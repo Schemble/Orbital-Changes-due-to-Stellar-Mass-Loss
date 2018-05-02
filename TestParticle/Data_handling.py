@@ -15,21 +15,21 @@ a_list=[]
 e_list=[]
 E_list=[]
 th_list=[]
-#with open('grid_data.csv') as f:
-#    for line in f.readlines():
-#        l=line.split(',')
-#        alph_list.append(float(l[0]))
-#        beta_list.append(float(l[1]))
-#        a_list.append(float(l[2]))
-#        e_list.append(float(l[3]))
-#        E_list.append(float(l[4]))
-#        th_list.append(float(l[5]))
-#alph_grid=array(alph_list)
-#beta_grid=log10(array(beta_list))
-#a_grid=log10(array(a_list))
-#e_grid=e_list
-#E_grid=E_list 
-#th_grid=th_list     
+with open('grid_data.csv') as f:
+    for line in f.readlines():
+        l=line.split(',')
+        alph_list.append(float(l[0]))
+        beta_list.append(float(l[1]))
+        a_list.append(float(l[2]))
+        e_list.append(float(l[3]))
+        E_list.append(float(l[4]))
+        th_list.append(float(l[5]))
+alph_grid=array(alph_list)
+beta_grid=log10(array(beta_list))
+a_grid=log10(array(a_list))
+e_grid=e_list
+E_grid=E_list 
+th_grid=th_list     
         
 with open('extra_a_data.csv') as f:
     for line in f.readlines():
@@ -72,7 +72,7 @@ with open('critical_data.csv') as f:
         E_list.append(float(l[4]))
         th_list.append(float(l[5]))
 
-with open('extra_e_data.csv') as f:
+with open('extra_e_data2.csv') as f:
     for line in f.readlines():
         l=line.split(',')
         alph_list.append(float(l[0]))
@@ -88,7 +88,7 @@ a_list=log10(array(a_list))
 e_list=array(e_list)
 E_list=array(E_list)
 th_list=array(th_list)
-#with open('data.csv', 'w') as f:
+#with open('data2.csv', 'w') as f:
 #    for i in range(len(alph_list)):
 #        out_string=''
 #        out_string+=str(alph_list[i])
@@ -175,7 +175,7 @@ for i in range(len(e_list)):
 #    order=argsort(beta_plot)
 #    beta_plot=array(beta_plot)[order]
 #    e_plot=array(e_plot)[order]
-#    plt.plot(beta_plot, log10(e_plot), '.-', label=r'$\alpha={}$'.format(alph))
+#    plt.plot(beta_plot, e_plot, '.-', label=r'$\alpha={}$'.format(alph))
 ##plt.legend()
 #plt.xlabel(r'$\log\beta$')
 #plt.ylabel(r'$\log e$')
@@ -184,35 +184,37 @@ for i in range(len(e_list)):
 
 
 
-#
-#grid_x, grid_y = np.mgrid[min(beta_list):max(beta_list):500j, min(alph_list):max(alph_list):500j]
-#points=column_stack((beta_list, alph_list))
-#grid_za = interpolate.griddata(points, a_list, (grid_x, grid_y), method='linear')
-#
-#plt.figure()
-#plt.xlabel(r'$\log\beta$')
-#plt.ylabel(r'$\alpha$')
-##plt.xscale('log')
-#plt.scatter(beta_list, alph_list, c=a_list)
-#plt.imshow(grid_za.T, extent=(min(beta_list),max(beta_list),min(alph_list),max(alph_list)), origin='lower', aspect='auto')
-#plt.colorbar(label=r'$\log a$')
-#cset=plt.contour(grid_za.T, arange(0, 2, 0.2), cmap=plt.cm.Greys, extent=(min(beta_list),max(beta_list),min(alph_list),max(alph_list)))
-#
-#
-#plt.show()
-#
-#grid_ze = interpolate.griddata(points, e_list, (grid_x, grid_y), method='linear')
-#
-#plt.figure()
-##plt.xscale('log')
-#plt.scatter(beta_list, alph_list, c=e_list)
-#plt.imshow(grid_ze.T, extent=(min(beta_list),max(beta_list),min(alph_list),max(alph_list)), origin='lower', aspect='auto')
-#plt.colorbar(label='$e$')
-#cset=plt.contour(grid_ze.T, arange(0, 1, 0.1), cmap=plt.cm.Greys, extent=(min(beta_list),max(beta_list),min(alph_list),max(alph_list)))
-#plt.xlabel(r'$\log\beta$')
-#plt.ylabel(r'$\alpha$')
-#
-#plt.show()
+
+grid_x, grid_y = np.mgrid[min(beta_list):max(beta_list):500j, min(alph_list):max(alph_list):500j]
+points=column_stack((beta_list, alph_list))
+grid_za = interpolate.griddata(points, a_list, (grid_x, grid_y), method='linear')
+
+plt.figure()
+plt.xlabel(r'$\log\beta$')
+plt.ylabel(r'$\alpha$')
+#plt.xscale('log')
+#plt.scatter(beta_list, alph_list, c=a_list, vmin=0, vmax=6)
+#plt.colorbar(label=r'$\log a_data$')
+plt.imshow(grid_za.T, vmin=0, vmax=6, extent=(min(beta_list),max(beta_list),min(alph_list),max(alph_list)), origin='lower', aspect='auto')
+plt.colorbar(label=r'$\log a_int$')
+cset=plt.contour(grid_za.T, arange(0, 2, 0.2), cmap=plt.cm.Greys, extent=(min(beta_list),max(beta_list),min(alph_list),max(alph_list)))
+
+
+plt.show()
+
+grid_ze = interpolate.griddata(points, e_list, (grid_x, grid_y), method='linear')
+
+plt.figure()
+#plt.xscale('log')
+#plt.scatter(beta_list, alph_list, c=e_list, vmin=0, vmax=1)
+#plt.colorbar(label=r'$e_data$')
+plt.imshow(grid_ze.T,vmin=0, vmax=1, extent=(min(beta_list),max(beta_list),min(alph_list),max(alph_list)), origin='lower', aspect='auto')
+plt.colorbar(label='$e_int$')
+cset=plt.contour(grid_ze.T, arange(0, 1, 0.1), cmap=plt.cm.Greys, extent=(min(beta_list),max(beta_list),min(alph_list),max(alph_list)))
+plt.xlabel(r'$\log\beta$')
+plt.ylabel(r'$\alpha$')
+
+plt.show()
 
 
 #alph_uniq=list(set(alph_list))

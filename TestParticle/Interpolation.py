@@ -54,13 +54,13 @@ with open('grid_data.csv') as f:
 
 
 
-with open('data.csv') as f:
+with open('data2.csv') as f:
     for line in f.readlines():
         l=line.split(',')
         alph_list.append(float(l[0]))
-#        beta_list.append(log10(float(l[1])))
-#        a_list.append(float(l[2]))
-#        e_list.append(float(l[3]))
+        beta_list.append(float(l[1]))
+        a_list.append(float(l[2]))
+        e_list.append(float(l[3]))
 #        E_list.append(float(l[4]))
 #        th_list.append(float(l[5]))
         data_points.append([float(l[0]), float(l[1]), float(l[2]), float(l[3]), float(l[4]), float(l[5])])
@@ -118,7 +118,16 @@ def Bilint(x, y ,points):
     f22=array(points[3][2:])
     #print(x11, y11)
     if any(f11==inf) or any(f12==inf) or any(f21==inf) or any(f22==inf):
-        return 'unbound'
+        return [inf, inf]
+    if x11==x and y11==y:
+        return f11
+    if x12==x and y12==y:
+        return f12
+    if x21==x and y21==y:
+        return f21
+    if x22==x and y22==y:
+        return f22
+    
     if (y11==y21 and y12==y22):
         
         y1=y11
@@ -177,6 +186,7 @@ def interpolate(beta, alpha):
     pointsa1  = [x for x in data_points if x[0]==a1]
     pointsa2  = [x for x in data_points if x[0]==a2]
     
+    
 #    for j in b1indices:        
 #
 #        if alpha>=alim[0] and alpha<=alim[1]:
@@ -223,11 +233,12 @@ def interpolate(beta, alpha):
 
     b1diff=[abs(x[0]-alpha) for x in pointsb1]
     pb11=pointsb1[argmin(b1diff)]
-    if pb11[0]<=alpha:
+    if pb11[0]<alpha:
         pointsb1=[x for x in pointsb1 if x[0]>=alpha]
-    elif pb11[0]>=alpha:
+    elif pb11[0]>alpha:
         pointsb1=[x for x in pointsb1 if x[0]<=alpha]
-
+    elif pb11[0]==alpha:
+        pointsb1=[x for x in pointsb1 if x[0]!=alpha]
     b1diff=[abs(x[0]-alpha) for x in pointsb1]
     pb12=pointsb1[argmin(b1diff)]
     deltab1=abs(pb11[0]-pb12[0])
@@ -236,10 +247,12 @@ def interpolate(beta, alpha):
     
     b2diff=[abs(x[0]-alpha) for x in pointsb2]
     pb21=pointsb2[argmin(b2diff)]
-    if pb21[0]<=alpha:
+    if pb21[0]<alpha:
         pointsb2=[x for x in pointsb2 if x[0]>=alpha]
-    elif pb21[0]>=alpha:
+    elif pb21[0]>alpha:
         pointsb2=[x for x in pointsb2 if x[0]<=alpha]
+    elif pb21[0]==alpha:
+        pointsb2=[x for x in pointsb2 if x[0]!=alpha]
     b2diff=[abs(x[0]-alpha) for x in pointsb2]
     pb22=pointsb2[argmin(b2diff)]
     deltab2=abs(pb21[0]-pb22[0])
@@ -248,10 +261,12 @@ def interpolate(beta, alpha):
         
     a1diff=[abs(x[1]-beta) for x in pointsa1]
     pa11=pointsa1[argmin(a1diff)]
-    if pa11[1]<=beta:
+    if pa11[1]<beta:
         pointsa1=[x for x in pointsa1 if x[1]>=beta]
-    elif pa11[1]>=beta:
+    elif pa11[1]>beta:
         pointsa1=[x for x in pointsa1 if x[1]<=beta]
+    elif pa11[1]==beta:
+        pointsa1=[x for x in pointsa1 if x[1]!=beta]
     a1diff=[abs(x[1]-beta) for x in pointsa1]
     pa12=pointsa1[argmin(a1diff)]
     deltaa1=abs(pa11[1]-pa12[1])
@@ -261,10 +276,12 @@ def interpolate(beta, alpha):
         
     a2diff=[abs(x[1]-beta) for x in pointsa2]
     pa21=pointsa2[argmin(a2diff)]
-    if pa21[1]<=beta:
+    if pa21[1]<beta:
         pointsa2=[x for x in pointsa2 if x[1]>=beta]
-    elif pa21[1]>=beta:
+    elif pa21[1]>beta:
         pointsa2=[x for x in pointsa2 if x[1]<=beta]
+    elif pa21[1]==beta:
+        pointsa2=[x for x in pointsa2 if x[1]!=beta]
     a2diff=[abs(x[1]-beta) for x in pointsa2]
     pa22=pointsa2[argmin(a2diff)]
     deltaa2=abs(pa21[1]-pa22[1])
@@ -286,38 +303,110 @@ def interpolate(beta, alpha):
     '''
     f=Bilint(beta, alpha, points)
     return(f)
-#interpolate(2.2101614945686077, 0.7058482368337547)
-e_int=[]
-e_sim=[]
-a_int=[]
-a_sim=[]
-alph_plot=[]
-beta_plot=[]
-for i in range(1000):
     
-    beta=random.uniform(-1, 4)
-    alpha=random.uniform(0.1, 0.95)
-    print(i, beta)
-    f=interpolate(beta, alpha)
-    if type(f)!=str:
-        a_int.append(f[0])
-        e_int.append(f[1])
-        alph_plot.append(alpha)
-        beta_plot.append(beta)
-        sim=TP.TestParticle(alpha=alpha, beta=10**beta)
-        sim.runrk4()
-        a_sim.append(log10(sim.GetA()))
+'''
+Compare interpolation to simulation at random points
+'''
+#e_int=[]
+#e_sim=[]
+#a_int=[]
+#a_sim=[]
+#alph_plot=[]
+#beta_plot=[]
+#for i in range(1000):
+#    
+#    beta=random.uniform(-1, 4)
+#    alpha=random.uniform(0.1, 0.95)
+#    print(i, beta)
+#    f=interpolate(beta, alpha)
+#    if type(f)!=str:
+#        a_int.append(f[0])
+#        e_int.append(f[1])
+#        alph_plot.append(alpha)
+#        beta_plot.append(beta)
+#        sim=TP.TestParticle(alpha=alpha, beta=10**beta)
+#        sim.runrk4()
+#        a_sim.append(log10(sim.GetA()))
+#
+#plt.figure()
+#plt.ymin=0
+#plt.ymax=1
+#plt.xmin=-1
+#plt.xmax=4
+#plt.scatter(beta_plot, alph_plot, c=array(a_int)/array(a_sim))
+#plt.xlabel(r'$\log\beta$')
+#plt.ylabel(r'$\alpha$')
+#plt.colorbar(label='(a_interpolated/a_simulated)')
+#plt.show()
+'''
+Make contour plots
+'''
+
+x=linspace(-1, 4, 100)
+y=linspace(0.1, 0.95, 100)
+za=[]
+ze=[]
+for i in x:
+    zya=[]
+    zye=[]
+    for j in y:
+        z=interpolate(i, j)
+        zya.append(z[0])
+        zye.append(z[1])
+    za.append(zya)
+    ze.append(zye)
+za=array(za)
+ze=array(ze)
 
 plt.figure()
-plt.ymin=0
-plt.ymax=1
-plt.xmin=-1
-plt.xmax=4
-plt.scatter(beta_plot, alph_plot, c=array(a_int)/array(a_sim))
 plt.xlabel(r'$\log\beta$')
 plt.ylabel(r'$\alpha$')
-plt.colorbar(label='(a_interpolated/a_simulated)')
+plt.scatter(beta_list, alph_list, c=a_list,vmin=0, vmax=6)
+plt.colorbar(label=r'$\loga_data$')
+plt.imshow(za.T,vmin=0, vmax=6, extent=(min(x), max(x), min(y), max(y)), origin='lower', aspect='auto')
+plt.colorbar(label=r'$\loga_in$')
+plt.contour(za.T, extent=(min(x), max(x), min(y), max(y)))
 plt.show()
-        
+
+plt.figure()
+plt.xlabel(r'$\log\beta$')
+plt.ylabel(r'$\alpha$')
+plt.scatter(beta_list, alph_list, c=e_list,vmin=0, vmax=1)
+plt.colorbar(label=r'$e_data$')
+plt.imshow(ze.T,vmin=0, vmax=1, extent=(min(x), max(x), min(y), max(y)), origin='lower', aspect='auto')
+plt.colorbar(label=r'$e_int$')
+plt.contour(ze.T, extent=(min(x), max(x), min(y), max(y)))
+plt.show()
+
+'''
+troubleshoot
+'''
+
+#interpolate(-1, 0.125551102204)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
     
     
