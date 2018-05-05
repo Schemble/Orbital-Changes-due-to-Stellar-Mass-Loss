@@ -342,8 +342,8 @@ Compare interpolation to simulation at random points
 Make contour plots
 '''
 
-x=linspace(-1, 4, 100)
-y=linspace(0.1, 0.95, 100)
+x=linspace(-1, 4, 1000)
+y=linspace(0.1, 0.95, 1000)
 za=[]
 ze=[]
 for i in x:
@@ -361,8 +361,8 @@ ze=array(ze)
 plt.figure()
 plt.xlabel(r'$\log\beta$')
 plt.ylabel(r'$\alpha$')
-plt.scatter(beta_list, alph_list, c=a_list,vmin=0, vmax=6)
-plt.colorbar(label=r'$\loga_data$')
+#plt.scatter(beta_list, alph_list, c=a_list,vmin=0, vmax=6)
+#plt.colorbar(label=r'$\loga_data$')
 plt.imshow(za.T,vmin=0, vmax=6, extent=(min(x), max(x), min(y), max(y)), origin='lower', aspect='auto')
 plt.colorbar(label=r'$\loga_in$')
 plt.contour(za.T, extent=(min(x), max(x), min(y), max(y)))
@@ -371,8 +371,8 @@ plt.show()
 plt.figure()
 plt.xlabel(r'$\log\beta$')
 plt.ylabel(r'$\alpha$')
-plt.scatter(beta_list, alph_list, c=e_list,vmin=0, vmax=1)
-plt.colorbar(label=r'$e_data$')
+#plt.scatter(beta_list, alph_list, c=e_list,vmin=0, vmax=1)
+#plt.colorbar(label=r'$e_data$')
 plt.imshow(ze.T,vmin=0, vmax=1, extent=(min(x), max(x), min(y), max(y)), origin='lower', aspect='auto')
 plt.colorbar(label=r'$e_int$')
 plt.contour(ze.T, extent=(min(x), max(x), min(y), max(y)))

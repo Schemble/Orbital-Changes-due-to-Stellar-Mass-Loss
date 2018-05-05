@@ -66,6 +66,8 @@ for b in beta:
     a_min=0.5
     a_max=1
     ex=TP.TestParticle(alpha=a_min, beta=b, circular=1)
+    ex.runrk4()
+    Gather(ex)
     Emin=ex.Etot()
     i=0
     while abs(a_max-a_min)>0.01:
@@ -88,7 +90,7 @@ for b in beta:
 #    if len(a_c)>2 and a_c[-1]<a_c[-2]:
 #        break
 
-with open('critical_data.csv', 'w') as f:
+with open('critical_data2.csv', 'w') as f:
     for i in range(len(alph_list)):
         out_string=''
         out_string+=str(alph_list[i])
@@ -99,13 +101,13 @@ with open('critical_data.csv', 'w') as f:
         out_string+=','+str(th_list[i])
         out_string+='\n'
         f.write(out_string)
-#plt.figure()
-#plt.xscale('log')
-#plt.scatter(beta, a_c,c=theta)
-#plt.xlabel(r'$\beta$')
-#plt.ylabel(r'$\alpha_c$')
-#plt.grid()
-#plt.show()
+plt.figure()
+plt.xscale('log')
+plt.scatter(beta, a_c,c=theta)
+plt.xlabel(r'$\beta$')
+plt.ylabel(r'$\alpha_c$')
+plt.grid()
+plt.show()
         
         
         
