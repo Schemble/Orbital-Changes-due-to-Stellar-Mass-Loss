@@ -39,6 +39,8 @@ class TestParticle:
         self.x_s=x_s
         self.y_s=y_s
         self.alpha=alpha
+        if alpha==0:
+            self.alpha=None
         self.beta=beta
         self.r=sqrt((self.x-self.x_s)**2+(self.y-self.y_s)**2)
         self.rlist=[self.r]
@@ -199,6 +201,8 @@ class TestParticle:
         return 1/2*self.v**2-G*self.m/self.r
     
     def InstMLoss(self):
+        if self.alpha==None:
+            return
         self.m-=self.alpha*self.m_init
         if self.m<0:
             self.m=0
@@ -253,7 +257,8 @@ class TestParticle:
     def GetEc(self):
         L=cross([self.x, self.y, 0], [self.vx, self.vy, 0])
         L2=L[0]**2+L[1]**2+L[2]**2
-        e=sqrt(1+(2*self.Etot()*L2)/(G*self.m)**2)
+        #e=sqrt(1+(2*self.Etot()*L2)/(G*self.m)**2)
+        e=sqrt(1-L2/(G*self.m*self.GetA()))
         if e < 1:
             return e
         else:
@@ -268,7 +273,7 @@ class TestParticle:
             dvy=-(Y0[1]-self.y_s)*G*self.m/(((Y0[0]-self.x_s)**2+(Y0[1]-self.y_s)**2)**(3/2))
             return array([dx, dy, dvx, dvy])
         else:
-            dm=-self.alpha/(self.beta)*self.m_init
+            dm=-self.alpha/(self.beta*self.torb)*self.m_init
             dx=Y0[2]
             dy=Y0[3]
             dvx=-(Y0[0]-self.x_s)*G*Y0[-1]/(((Y0[0]-self.x_s)**2+(Y0[1]-self.y_s)**2)**(3/2))
@@ -310,13 +315,19 @@ class TestParticle:
 
     def runrk4(self, orbit=False, ubbreak=0):
         
+        if self.alpha==None and self.beta==0 and orbit==False:
+            return
+        
         if (self.beta==None or self.beta==0) and orbit==False:
             self.InstMLoss()
             return
+        
         if orbit==True:
             beta_i=self.beta
             self.beta=float('inf')
-        if self.alpha==None or orbit==True:
+            alpha_i=self.alpha
+            self.alpha=None
+        if self.alpha==None:
             Y=array([self.x, self.y, self.vx, self.vy])
             tol=[0.1, 0.1, 0.1, 0.1]
             dtheta=0
@@ -358,7 +369,7 @@ class TestParticle:
                 
                 
                 Y=y[0]
-                h *= S*min(tol/diff)**(1/4)
+                h *= S*min(tol/diff)**(1/5)
                 if t+h>tf:
                     h=tf-t
             
@@ -388,6 +399,7 @@ class TestParticle:
             
                 if dtheta<=dtheta_p:
                     self.beta=beta_i
+                    self.alpha=alpha_i
                     break
 def RK4(f, y0, t0, tf, tol):
     '''

@@ -25,7 +25,7 @@ e_list=[]
 E_list=[]
 th_list=[]
 
-with open('grid_data.csv') as f:
+with open('grid_data3.csv') as f:
     for line in f.readlines():
         l=line.split(',')
         alph_grid.append(float(l[0]))
@@ -34,17 +34,34 @@ with open('grid_data.csv') as f:
         e_grid.append(float(l[3]))
         E_grid.append(float(l[4]))
         th_grid.append(float(l[5]))
-alph_grid=array(alph_grid[1:])
-beta_grid=array(beta_grid[1:])
-a_grid=log10(array(a_grid[1:]))
-e_grid=array(e_grid[1:])
-E_grid=array(E_grid[1:])
-th_grid=array(th_grid[1:])
+        
+with open('grid_data3.1.csv') as f:
+    for line in f.readlines():
+        l=line.split(',')
+        alph_grid.append(float(l[0]))
+        beta_grid.append(float(l[1]))
+        a_grid.append(float(l[2]))
+        e_grid.append(float(l[3]))
+        E_grid.append(float(l[4]))
+        th_grid.append(float(l[5]))
+        
+
+        
+alph_grid=array(alph_grid)
+beta_grid=array(beta_grid)
+a_grid=log10(array(a_grid))
+e_grid=array(e_grid)
+E_grid=array(E_grid)
+th_grid=array(th_grid)
+
+
 
 alph_uniq=list(set(alph_grid))
 alph_uniq.sort()
 beta_uniq=list(set(beta_grid))
 beta_uniq.sort()
+
+alph_uniq = [ round(elem, 2) for elem in alph_uniq ]
 
 def Gather(f):
     a_list.append(f.GetA())
@@ -116,18 +133,17 @@ a flattening
 Precision a(beta)
 '''
 
-
-#beta_uniq=list(set(beta_grid))
-#alph_uniq=list(set(alph_grid))
-#beta_uniq.sort()
-#alph_uniq.sort()
+#
 #tol=0.01
 #S=0.95
+#
+##alph_uniq=[0.9]
+#
+#
 #for alph in alph_uniq:
 #    indices = [i for i, x in enumerate(alph_grid) if x == alph]
 #    for j in range(len(indices)-1):
-#        
-#        if abs(a_grid[indices[j]]-a_grid[indices[j+1]])>tol:
+#        if all([a_grid[indices[j]], a_grid[indices[j+1]]])!=inf and abs(a_grid[indices[j]]-a_grid[indices[j+1]])>tol:
 #            a=a_grid[indices[j]]
 #            b=beta_grid[indices[j]]
 #            b_max=beta_grid[indices[j+1]]
@@ -136,6 +152,7 @@ Precision a(beta)
 #                b+=h
 #                ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
 #                ex.runrk4()
+#                Gather(ex)
 #                a=ex.GetA()
 #            while b<b_max: 
 #            
@@ -144,7 +161,8 @@ Precision a(beta)
 #                for h0 in [h, h/2]:
 #                    
 #                    ex=TP.TestParticle(alpha=alph, beta=b+h0, circular=1)
-#                    ex.runrk4()                
+#                    ex.runrk4()       
+#                    Gather(ex)
 #                    y.append(ex.GetA())
 #                diff=abs(log10(y[0])-log10(y[1]))
 #                
@@ -167,11 +185,11 @@ Precision a(beta)
 #                        break
 #                    
 #                    b+=h
-#                    Gather(ex)
-#                    h *= S*(tol/diff)**(1/4)
-#                print(alph, b)
+#                    #Gather(ex)
+#                    h *= S*(tol/diff)**(1/5)
+#                print(alph, b, diff)
 #
-#with open('extra_a_data.csv', 'w') as f:
+#with open('extra_a_data(4).csv', 'w') as f:
 #    for i in range(len(alph_list)):
 #        out_string=''
 #        out_string+=str(alph_list[i])
@@ -187,7 +205,7 @@ Precision a(beta)
 precision a(alpha)
 '''
 
-#
+
 #
 #beta_uniq=list(set(beta_grid))
 #alph_uniq=list(set(alph_grid))
@@ -195,11 +213,12 @@ precision a(alpha)
 #alph_uniq.sort()
 #tol=0.1
 #S=0.95
+#
+#
 #for b in beta_uniq:
 #    indices = [i for i, x in enumerate(beta_grid) if x == b]
 #    for j in range(len(indices)-1):
-#        
-#        if abs(a_grid[indices[j]]-a_grid[indices[j+1]])>tol:
+#        if all(array([a_grid[indices[j]], a_grid[indices[j+1]]])!=inf) and abs(a_grid[indices[j]]-a_grid[indices[j+1]])>tol:            
 #            a=a_grid[indices[j]]
 #            alph=alph_grid[indices[j]]
 #            alph_max=alph_grid[indices[j+1]]
@@ -214,9 +233,10 @@ precision a(alpha)
 #                    ex=TP.TestParticle(alpha=alph+h0, beta=b, circular=1)
 #                    ex.runrk4()                
 #                    y.append(ex.GetA())
-#                diff=abs(log10(y[0])-log10(y[1]))
-#                if any(log10(y[0])-log10(y[1])==inf):
+#                y=array(y)
+#                if any(y==inf):
 #                    break
+#                diff=abs(log10(y[0])-log10(y[1]))
 #                if diff>tol:
 #                    h *= S*(tol/diff)**(1/5)
 #                    if h<1e-6:
@@ -239,10 +259,10 @@ precision a(alpha)
 #                    
 #                    alph+=h
 #                    Gather(ex)
-#                    h *= S*(tol/diff)**(1/4)
-#                print(alph, b, h)
+#                    h *= S*(tol/diff)**(1/5)
+#                print(alph, b)
 #
-#with open('extra2_a_data.csv', 'w') as f:
+#with open('extra2_a_data(4).csv', 'w') as f:
 #    for i in range(len(alph_list)):
 #        out_string=''
 #        out_string+=str(alph_list[i])
@@ -314,10 +334,10 @@ more alpha around 0.5
 #                    
 #                    b+=h
 #                    Gather(ex)
-#                    h *= S*(tol/diff)**(1/4)
+#                    h *= S*(tol/diff)**(1/5)
 #                print(alph, b)
 #
-#with open('0.5_a_data.csv', 'w') as f:
+#with open('0.5_a_data(4).csv', 'w') as f:
 #    for i in range(len(alph_list)):
 #        out_string=''
 #        out_string+=str(alph_list[i])
@@ -331,7 +351,7 @@ more alpha around 0.5
 '''
 Precision e
 '''
-tol=0.01
+tol=0.05
 S=0.95
 print(alph_uniq)
 for alph in alph_uniq:
@@ -360,7 +380,7 @@ for alph in alph_uniq:
                     ex=TP.TestParticle(alpha=alph, beta=b+h0, circular=1)
                     ex.runrk4()                
                     y.append(ex.GetEc())
-                diff=abs(log10(y[0])-log10(y[1]))
+                diff=abs(y[0]-y[1])
                 
                 if diff>tol:
                     h *= S*(tol/diff)**(1/5)
@@ -382,10 +402,10 @@ for alph in alph_uniq:
                     
                     b+=h
                     Gather(ex)
-                    h *= S*(tol/diff)**(1/4)
+                    h *= S*(tol/diff)**(1/5)
                 print(alph, b)
 
-with open('extra_e_data2.csv', 'w') as f:
+with open('extra_e_data2(4).csv', 'w') as f:
     for i in range(len(alph_list)):
         out_string=''
         out_string+=str(alph_list[i])

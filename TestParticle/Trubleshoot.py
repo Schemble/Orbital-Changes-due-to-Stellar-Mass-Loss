@@ -49,9 +49,9 @@ Simple orbit
 simple orbit mass loss
 '''
 
-test=TP.TestParticle(alpha=0.4, beta=0.77,circular=1)
+test=TP.TestParticle(alpha=0.61, beta=10**0.28,circular=1)
 test.runrk4()
-print(test.GetA())
+print(log10(test.GetA()))
 #
 #fig=plt.figure()
 #ax=fig.add_subplot(111)

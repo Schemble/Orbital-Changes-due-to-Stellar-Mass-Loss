@@ -18,11 +18,11 @@ import scipy.optimize as op
 Find relation between critical alpha and varying beta
 '''
 
-logbeta=arange(-1, 2, 0.5)
+logbeta=arange(-1, 2.5, 0.5)
 beta=10**logbeta
 m=1
 x=1
-alpha=array([.1, .2, .3, .4, .5, .6, .7, .8, .9, 1])
+alpha=arange(0, 1.05, 0.05)
 alpha_crit=[0.5]
 xplot=linspace(0.1,1)
 #alpha=[1]
@@ -35,37 +35,37 @@ Etot=[]
 
 for a in alpha:
     test=TP.TestParticle(m, x, circular=True, alpha=a, beta=0)
-    test.InstMLoss()
+    test.runrk4()
     Etot.append(test.Etot())
 
 linreg=linregress(alpha, Etot)
-plt.plot(xplot, xplot*linreg.slope+linreg.intercept, label=r'$\beta=0$')
-#print(linreg.intercept)
+plt.plot(xplot, xplot*linreg.slope+linreg.intercept,c='0', label=r'$\beta=0$')
+print(linreg.intercept)
 
 
-def logarithmic(x, a, c):
-    print(x,a,b, c)
-    return a*log(x)+c
-    
-
-def polynomial(x, a, b, c):
-    return a*x**b+c
-
-def exponential(x, a, b, c):
-    return a*exp(b*x)+c
-
-def other(x, a, b,c, d):
-    return a*x/(b-c*x)+d
-
+#def logarithmic(x, a, c):
+#    print(x,a,b, c)
+#    return a*log(x)+c
+#    
+#
+#def polynomial(x, a, b, c):
+#    return a*x**b+c
+#
+#def exponential(x, a, b, c):
+#    return a*exp(b*x)+c
+#
+#def other(x, a, b,c, d):
+#    return a*x/(b-c*x)+d
+cmap = plt.get_cmap('jet_r')
 data=[]
-for b in beta[1:]:
+for b in beta:
     Etot=[]
     for a in alpha:
         test=TP.TestParticle(m, x, circular=1, alpha=a, beta=b)
-        data.append(array(test.run(0.001, mloss=1)))
+        test.runrk4()
         
-        Etot.append(data[-1][-2][-1])
-#
+        Etot.append(test.Etot())
+        print(b, a)
 #
 #        print('beta={}, alpha={} done'.format(b, a))
    
@@ -88,10 +88,12 @@ for b in beta[1:]:
     
 #    a_crit=op.brentq(f, 0, 1)
 #    alpha_crit.append(a_crit)
-    plt.plot(alpha, Etot, '.', label=r'$\beta=${}'.format(b))
-    print(test.Etot(),test.r, test.v, test.m)
+    color=cmap((log10(b)-min(logbeta))/(max(logbeta)-min(logbeta)))
+    plt.plot(alpha, Etot, '.-',c=color, label=r'$\log\beta=${}'.format(log10(b)))
 #    plt.plot(xplot, yplot, label=r'$\beta={}$'.format(b))
 #plt.title(r'$\frac{x}{1-x}$ fit')
+plt.xlim(xmin=0, xmax=1)
+plt.ylim(ymax=20, ymin=-20)
 plt.ylabel(r'$E_{tot}$')
 plt.xlabel(r'$\alpha$')
 plt.legend()

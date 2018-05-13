@@ -16,65 +16,10 @@ a_list=[]
 e_list=[]
 E_list=[]
 th_list=[]
-with open('grid_data.csv') as f:
-    for line in f.readlines():
-        l=line.split(',')
-        alph_list.append(float(l[0]))
-        beta_list.append(float(l[1]))
-        a_list.append(float(l[2]))
-        e_list.append(float(l[3]))
-        E_list.append(float(l[4]))
-        th_list.append(float(l[5]))
-alph_grid=array(alph_list)
-beta_grid=log10(array(beta_list))
-a_grid=log10(array(a_list))
-e_grid=e_list
-E_grid=E_list 
-th_grid=th_list     
-        
-with open('extra_a_data.csv') as f:
-    for line in f.readlines():
-        l=line.split(',')
-        alph_list.append(float(l[0]))
-        beta_list.append(float(l[1]))
-        a_list.append(float(l[2]))
-        e_list.append(float(l[3]))
-        E_list.append(float(l[4]))
-        th_list.append(float(l[5]))
-
-with open('0.5_a_data.csv') as f:
-    for line in f.readlines():
-        l=line.split(',')
-        alph_list.append(float(l[0]))
-        beta_list.append(float(l[1]))
-        a_list.append(float(l[2]))
-        e_list.append(float(l[3]))
-        E_list.append(float(l[4]))
-        th_list.append(float(l[5]))
-        
-        
-with open('extra2_a_data.csv') as f:
-    for line in f.readlines():
-        l=line.split(',')
-        alph_list.append(float(l[0]))
-        beta_list.append(float(l[1]))
-        a_list.append(float(l[2]))
-        e_list.append(float(l[3]))
-        E_list.append(float(l[4]))
-        th_list.append(float(l[5]))
-        
-with open('critical_data.csv') as f:
-    for line in f.readlines():
-        l=line.split(',')
-        alph_list.append(float(l[0]))
-        beta_list.append(float(l[1]))
-        a_list.append(float(l[2]))
-        e_list.append(float(l[3]))
-        E_list.append(float(l[4]))
-        th_list.append(float(l[5]))
+data_points=[]
 
 
-with open('extra_e_data.csv') as f:
+with open('grid_data3.csv') as f:
     for line in f.readlines():
         l=line.split(',')
         alph_list.append(float(l[0]))
@@ -82,9 +27,10 @@ with open('extra_e_data.csv') as f:
         a_list.append(float(l[2]))
         e_list.append(float(l[3]))
         E_list.append(float(l[4]))
-        th_list.append(float(l[5]))      
+        th_list.append(float(l[5]))
+        data_points.append([float(l[0]),float(l[1]),float(l[2]),float(l[3]),float(l[4]),float(l[5])])
         
-with open('extra_e_data2.csv') as f:
+with open('grid_data3.1.csv') as f:
     for line in f.readlines():
         l=line.split(',')
         alph_list.append(float(l[0]))
@@ -92,34 +38,113 @@ with open('extra_e_data2.csv') as f:
         a_list.append(float(l[2]))
         e_list.append(float(l[3]))
         E_list.append(float(l[4]))
-        th_list.append(float(l[5])) 
+        th_list.append(float(l[5]))
+        data_points.append([float(l[0]),float(l[1]),float(l[2]),float(l[3]),float(l[4]),float(l[5])])
         
+#with open('grid_data2.7.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(float(l[1]))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5]))
+#alph_grid=array(alph_list)
+#beta_grid=log10(array(beta_list))
+#a_grid=log10(array(a_list))
+#e_grid=e_list
+#E_grid=E_list 
+#th_grid=th_list     
         
-with open('big_data_incomp.csv') as f:
-    for line in f.readlines():
-        l=line.split(',')
-        alph_list.append(float(l[0]))
-        beta_list.append(float(l[1]))
-        a_list.append(float(l[2]))
-        e_list.append(float(l[3]))
-        E_list.append(float(l[4]))
-        th_list.append(float(l[5])) 
-
-with open('alph_a_data_incomp.csv') as f:
-    for line in f.readlines():
-        l=line.split(',')
-        alph_list.append(float(l[0]))
-        beta_list.append(float(l[1]))
-        a_list.append(float(l[2]))
-        e_list.append(float(l[3]))
-        E_list.append(float(l[4]))
-        th_list.append(float(l[5])) 
-alph_list=array(alph_list)
-beta_list=log10(array(beta_list))
-a_list=log10(array(a_list))
-e_list=array(e_list)
-E_list=array(E_list)
-th_list=array(th_list)
+#with open('extra_a_data.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(float(l[1]))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5]))
+#
+#with open('0.5_a_data.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(float(l[1]))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5]))
+#        
+#        
+#with open('extra2_a_data.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(float(l[1]))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5]))
+#        
+#with open('critical_data.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(float(l[1]))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5]))
+#
+#
+#with open('extra_e_data.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(float(l[1]))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5]))      
+#        
+#with open('extra_e_data2.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(float(l[1]))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5])) 
+#        
+#        
+#with open('big_data_incomp.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(float(l[1]))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5])) 
+#
+#with open('alph_a_data_incomp.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(float(l[1]))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5])) 
+#alph_list=array(alph_list)
+#beta_list=log10(array(beta_list))
+#a_list=log10(array(a_list))
+#e_list=array(e_list)
+#E_list=array(E_list)
+#th_list=array(th_list)
 
 #with open('data_wo_crit.csv', 'w') as f:
 #    for i in range(len(alph_list)):
@@ -132,11 +157,88 @@ th_list=array(th_list)
 #        out_string+=','+str(th_list[i])
 #        out_string+='\n'
 #        f.write(out_string)
-for i in range(len(e_list)):
-    if e_list[i]>1:
-        e_list[i]=inf
+#for i in range(len(e_list)):
+#    if e_list[i]>1:
+#        e_list[i]=inf
 
 
+data_points = array(sorted(data_points, key=lambda x: x[0]))
+data_points = array(sorted(data_points, key=lambda x: x[1]))
+
+'''
+Plot E vs alpha
+'''
+#beta_list=log10(array(beta_list))
+#beta_uniq=sort(list(set(beta_list)))
+#
+##beta_uniq=arange(-1, 2.5, 0.5)
+#beta_uniq=beta_uniq[10:-10]
+#fig=plt.figure()
+#ax = fig.add_subplot(111)
+#cmap = plt.get_cmap('jet_r')
+#for b in beta_uniq[::2]:
+#    alph_plot=[]
+#    E_plot=[]
+#    indices = [i for i, x in enumerate(beta_list) if x == b]
+#    for i in indices:
+#        alph_plot.append(alph_list[i])
+#        E_plot.append(E_list[i])
+#    order=argsort(alph_plot)
+#    alph_plot=array(alph_plot)[order]
+#    E_plot=array(E_plot)[order]
+#    plt.plot(alph_plot, E_plot,'.-', c=cmap((b-min(beta_uniq))/(max(beta_uniq)-min(beta_uniq))), label=r'$\log\beta={:.2f}$'.format(b))
+#fig.legend(bbox_to_anchor=(1, 0.89), loc='upper right', ncol=1)
+#plt.xlabel(r'$\alpha$')
+#plt.ylabel(r'$E_{tot}$')
+#plt.xticks(arange(0, 1.1, 0.1))
+#plt.xlim(xmin=0, xmax=1)
+#plt.ylim(ymin=-20,ymax=20)
+#plt.subplots_adjust(right=0.75)
+#ax.grid()
+#plt.show()
+
+'''
+Plot ac vs beta
+'''
+
+beta_list=array(beta_list)
+beta_uniq=sort(list(set(data_points[:,1])))
+
+def findzero(x, y):
+    linreg=linregress(x, y)
+    return -linreg.intercept/linreg.slope
+
+#beta_uniq=arange(-1, 2.5, 0.5)
+#beta_uniq=beta_uniq[10:-10]
+fig=plt.figure()
+ax = fig.add_subplot(111)
+cmap = plt.get_cmap('jet_r')
+beta_plot=[]
+ac_plot=[]
+theta_plot=[]
+for b in beta_uniq:
+    print(b)
+    indices = [i for i, x in enumerate(data_points[:,1]) if x == b]
+    for j in range(len(indices[:-1])):
+        if data_points[indices[j], 4]*data_points[indices[j+1], 4]<0:
+            ac_plot.append(findzero([data_points[indices[j],0],data_points[indices[j+1], 0]], [data_points[indices[j], 4], data_points[indices[j+1],4]]))
+            beta_plot.append(b)
+            theta_plot.append(data_points[indices[j],5])
+plt.scatter(log10(beta_plot), ac_plot, c=theta_plot)
+#fig.legend(bbox_to_anchor=(1, 0.89), loc='upper right', ncol=1)
+plt.xlabel(r'$\log\beta$')
+plt.ylabel(r'$\alpha_c$')
+#plt.xticks(arange(0, 1.1, 0.1))
+#plt.xlim(xmin=0, xmax=1)
+#plt.ylim(ymin=-20,ymax=20)
+#plt.subplots_adjust(right=0.75)
+ax.grid()
+plt.show()
+
+
+
+'''
+'''
 #alph_uniq=sort(list(set(alph_grid)))
 #plt.figure()
 #plt.grid()

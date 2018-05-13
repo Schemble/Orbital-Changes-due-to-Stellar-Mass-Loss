@@ -10,7 +10,7 @@ from scipy import *
 from matplotlib import pyplot as plt
 from scipy.stats import linregress
 import TestParticle as TP
-
+'''
 alph_list=[]
 beta_list=[]
 a_list=[]
@@ -20,7 +20,19 @@ th_list=[]
 
 data_points=[]
 
-with open('critical_data2.csv') as f:
+with open('grid_data.csv') as f:
+    for line in f.readlines():
+        l=line.split(',')
+        #alph_list.append(float(l[0]))
+        #beta_list.append(float(l[1]))
+        #a_list.append(float(l[2]))
+        #e_list.append(float(l[3]))
+#        E_list.append(float(l[4]))
+#        th_list.append(float(l[5]))
+        data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+
+
+with open('grid_data2.csv') as f:
     for line in f.readlines():
         l=line.split(',')
         #alph_list.append(float(l[0]))
@@ -50,9 +62,8 @@ alph_uniq.sort()
 beta_uniq=list(set(beta_list))
 beta_uniq.sort()
 #beta_uniq = [ round(elem, 2) for elem in beta_uniq ]
-
+'''
 def backlinint(value, x1, x2, f1, f2):
-
     f=value
     return (x1*(f2-f)+x2*(f-f1))/(f2-f1)
 
@@ -97,11 +108,31 @@ def contour(value, idx):
             beta.append(backlinint(value, p1[1], p2[1], p1[idx], p2[idx]))
             alpha.append(alph)
             y_grid.append(alph)
-            c.append(abs(p1[1]-p2[1]))
-    return alpha, beta, x_grid, y_grid, c
 
-alpha_plot, beta_plot, x_grid, y_grid, c=contour(0.4, 3)
-a_list=arange(0, 6, 0.5)
+    return alpha, beta, x_grid, y_grid
+'''
+#alpha_plot, beta_plot, x_grid, y_grid, c=contour(0.4, 3)
+e_list=arange(0, 1,0.1)
+#alpha_plot = [x for _,x in sorted(zip(beta_plot,alpha_plot))]
+#beta_plot.sort()
+fig, ax = plt.subplots()
+#ax.set_xticks(x_grid)
+#ax.set_yticks(y_grid)
+#ax.xaxis.grid(True)
+#ax.yaxis.grid(True)
+for e in e_list:
+    alpha_plot, beta_plot, x_grid, y_grid, c=contour(e, 3)
+    alpha_plot = [x for _,x in sorted(zip(beta_plot,alpha_plot))]
+    beta_plot.sort()
+    plt.plot(beta_plot, alpha_plot,'.-', label='e={:.1f}'.format(e))
+plt.grid()
+plt.ylabel(r'$\alpha$')
+plt.xlabel(r'$\log\beta$')
+plt.legend()
+plt.show()
+
+#alpha_plot, beta_plot, x_grid, y_grid, c=contour(0.4, 3)
+a_list=arange(0, 1.5, 0.1)
 #alpha_plot = [x for _,x in sorted(zip(beta_plot,alpha_plot))]
 #beta_plot.sort()
 fig, ax = plt.subplots()
@@ -113,10 +144,20 @@ for a in a_list:
     alpha_plot, beta_plot, x_grid, y_grid, c=contour(a, 2)
     alpha_plot = [x for _,x in sorted(zip(beta_plot,alpha_plot))]
     beta_plot.sort()
-    plt.plot(beta_plot, alpha_plot,'.-', label=a)
+    plt.plot(beta_plot, alpha_plot,'.-', label='a={:.2f}'.format(a))
+plt.grid()
+plt.ylabel(r'$\alpha$')
+plt.xlabel(r'$\log\beta$')
 plt.legend()
 plt.show()
+'''
 
+
+
+
+
+'''
+'''
 def backlinint(value, x1, x2, f1, f2):
 
     f=value
