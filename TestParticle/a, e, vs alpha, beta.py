@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 from scipy.stats import linregress
 
 fixed_beta=10**(arange(3.25, 4.25, 0.25))
-fixed_alpha=arange(0.1,1,0.1)
+fixed_alpha=arange(0.05,1,0.05)
 i=0
 b=fixed_beta[0]
 b_max=fixed_beta[1]

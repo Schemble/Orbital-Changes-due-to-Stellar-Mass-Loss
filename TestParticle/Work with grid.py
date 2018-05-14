@@ -277,100 +277,32 @@ precision a(alpha)
 '''
 more alpha around 0.5
 '''
-#alph05=arange(0.46, 0.55, 0.01)
-#tol=0.01
-#S=0.95
-#
-#
-#indices = [i for i, x in enumerate(alph_grid) if x == 0.5]
-#for alph in alph05:
-#    for j in range(len(indices)-1):
-#        
-#        if abs(a_grid[indices[j]]-a_grid[indices[j+1]])>tol:
-#            b=beta_grid[indices[j]]
-#            ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
-#            ex.runrk4()
-#            a=ex.GetA()
-#            #a=a_grid[indices[j]]
-#            
-#            b_max=beta_grid[indices[j+1]]
-#            h=0.001*b
-#            while a==inf:
-#                b+=h
-#                ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
-#                ex.runrk4()
-#                a=ex.GetA()
-#                
-#            Gather(ex)
-#            print(a, b)
-#            while b<b_max: 
-#            
-#                y=[]
-#                
-#                for h0 in [h, h/2]:
-#                    
-#                    ex=TP.TestParticle(alpha=alph, beta=b+h0, circular=1)
-#                    ex.runrk4()                
-#                    y.append(ex.GetA())
-#                    print(y[-1], b+h0)
-#                diff=abs(log10(y[0])-log10(y[1]))
-#                
-#                if diff>tol:
-#                    h *= S*(tol/diff)**(1/5)
-#                    if b+h>b_max:
-#                        h=b_max-b
-#                        
-#                    b+=h
-#                    ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
-#                    ex.runrk4()
-#                    Gather(ex)
-#                    if b+h>b_max:
-#                        h=b_max-b
-#                        
-#                        
-#                else:
-#                    if b+h>b_max:
-#                        h=b_max-b
-#                    
-#                    b+=h
-#                    Gather(ex)
-#                    h *= S*(tol/diff)**(1/5)
-#                print(alph, b)
-#
-#with open('0.5_a_data(4).csv', 'w') as f:
-#    for i in range(len(alph_list)):
-#        out_string=''
-#        out_string+=str(alph_list[i])
-#        out_string+=','+str(beta_list[i])
-#        out_string+=','+str(a_list[i])
-#        out_string+=','+str(e_list[i])
-#        out_string+=','+str(E_list[i])
-#        out_string+=','+str(th_list[i])
-#        out_string+='\n'
-#        f.write(out_string)
-'''
-Precision e
-'''
-tol=0.05
+alph05=arange(0.46, 0.55, 0.01)
+tol=0.01
 S=0.95
-print(alph_uniq)
-for alph in alph_uniq:
-    
-    indices = [i for i, x in enumerate(alph_grid) if x == alph]
 
+
+indices = [i for i, x in enumerate(alph_grid) if x == 0.5]
+for alph in alph05:
     for j in range(len(indices)-1):
         
-        if abs(e_grid[indices[j]]-e_grid[indices[j+1]])>tol:
-            a=a_grid[indices[j]]
-            e=e_grid[indices[j]]
+        if abs(a_grid[indices[j]]-a_grid[indices[j+1]])>tol:
             b=beta_grid[indices[j]]
+            ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
+            ex.runrk4()
+            a=ex.GetA()
+            #a=a_grid[indices[j]]
+            
             b_max=beta_grid[indices[j+1]]
-            h=0.01*b
+            h=0.001*b
             while a==inf:
                 b+=h
                 ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
                 ex.runrk4()
                 a=ex.GetA()
+                
+            Gather(ex)
+            print(a, b)
             while b<b_max: 
             
                 y=[]
@@ -379,33 +311,33 @@ for alph in alph_uniq:
                     
                     ex=TP.TestParticle(alpha=alph, beta=b+h0, circular=1)
                     ex.runrk4()                
-                    y.append(ex.GetEc())
-                diff=abs(y[0]-y[1])
+                    y.append(ex.GetA())
+                    print(y[-1], b+h0)
+                diff=abs(log10(y[0])-log10(y[1]))
                 
                 if diff>tol:
                     h *= S*(tol/diff)**(1/5)
                     if b+h>b_max:
-                        b=b_max
-                        break
+                        h=b_max-b
+                        
                     b+=h
                     ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
                     ex.runrk4()
                     Gather(ex)
                     if b+h>b_max:
-                        b=b_max
-                        break
+                        h=b_max-b
+                        
                         
                 else:
                     if b+h>b_max:
-                        b=b_max
-                        break
+                        h=b_max-b
                     
                     b+=h
                     Gather(ex)
                     h *= S*(tol/diff)**(1/5)
                 print(alph, b)
 
-with open('extra_e_data2(4).csv', 'w') as f:
+with open('0.5_a_data(4).csv', 'w') as f:
     for i in range(len(alph_list)):
         out_string=''
         out_string+=str(alph_list[i])
@@ -416,3 +348,71 @@ with open('extra_e_data2(4).csv', 'w') as f:
         out_string+=','+str(th_list[i])
         out_string+='\n'
         f.write(out_string)
+'''
+Precision e
+'''
+#tol=0.05
+#S=0.95
+#print(alph_uniq)
+#for alph in alph_uniq:
+#    
+#    indices = [i for i, x in enumerate(alph_grid) if x == alph]
+#
+#    for j in range(len(indices)-1):
+#        
+#        if abs(e_grid[indices[j]]-e_grid[indices[j+1]])>tol:
+#            a=a_grid[indices[j]]
+#            e=e_grid[indices[j]]
+#            b=beta_grid[indices[j]]
+#            b_max=beta_grid[indices[j+1]]
+#            h=0.01*b
+#            while a==inf:
+#                b+=h
+#                ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
+#                ex.runrk4()
+#                a=ex.GetA()
+#            while b<b_max: 
+#            
+#                y=[]
+#                
+#                for h0 in [h, h/2]:
+#                    
+#                    ex=TP.TestParticle(alpha=alph, beta=b+h0, circular=1)
+#                    ex.runrk4()                
+#                    y.append(ex.GetEc())
+#                diff=abs(y[0]-y[1])
+#                
+#                if diff>tol:
+#                    h *= S*(tol/diff)**(1/5)
+#                    if b+h>b_max:
+#                        b=b_max
+#                        break
+#                    b+=h
+#                    ex=TP.TestParticle(alpha=alph, beta=b, circular=1)
+#                    ex.runrk4()
+#                    Gather(ex)
+#                    if b+h>b_max:
+#                        b=b_max
+#                        break
+#                        
+#                else:
+#                    if b+h>b_max:
+#                        b=b_max
+#                        break
+#                    
+#                    b+=h
+#                    Gather(ex)
+#                    h *= S*(tol/diff)**(1/5)
+#                print(alph, b)
+#
+#with open('extra_e_data2(4).csv', 'w') as f:
+#    for i in range(len(alph_list)):
+#        out_string=''
+#        out_string+=str(alph_list[i])
+#        out_string+=','+str(beta_list[i])
+#        out_string+=','+str(a_list[i])
+#        out_string+=','+str(e_list[i])
+#        out_string+=','+str(E_list[i])
+#        out_string+=','+str(th_list[i])
+#        out_string+='\n'
+#        f.write(out_string)
