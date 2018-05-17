@@ -35,7 +35,7 @@ th_list=[]
 
 lattice_points=[]
 data_points=[]
-with open('grid_data.csv') as f:
+with open('grid_data3.csv') as f:
     for line in f.readlines():
         l=line.split(',')
         alph_lattice.append(float(l[0]))
@@ -44,7 +44,20 @@ with open('grid_data.csv') as f:
 #        e_lattice.append(float(l[3]))
 #        E_lattice.append(float(l[4]))
 #        th_lattice.append(float(l[5]))
-        lattice_points.append([float(l[0]),log10(float(l[1])), float(l[2]), float(l[3]), float(l[4]), float(l[5])])
+        lattice_points.append([float(l[0]),log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+
+#with open('grid_data3.1.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_lattice.append(float(l[0]))
+#        beta_lattice.append(log10(float(l[1])))
+##        a_lattice.append(float(l[2]))
+##        e_lattice.append(float(l[3]))
+##        E_lattice.append(float(l[4]))
+##        th_lattice.append(float(l[5]))
+#        lattice_points.append([float(l[0]),log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+
+
 #alph_lattice=array(alph_lattice[1:])
 #beta_lattice=log10(array(beta_lattice[1:]))
 #a_lattice=log10(array(a_lattice[1:]))
@@ -54,16 +67,27 @@ with open('grid_data.csv') as f:
 
 
 
-with open('data2.csv') as f:
+with open('grid_data3.csv') as f:
     for line in f.readlines():
         l=line.split(',')
         alph_list.append(float(l[0]))
-        beta_list.append(float(l[1]))
+        beta_list.append(log10(float(l[1])))
         a_list.append(float(l[2]))
         e_list.append(float(l[3]))
 #        E_list.append(float(l[4]))
 #        th_list.append(float(l[5]))
-        data_points.append([float(l[0]), float(l[1]), float(l[2]), float(l[3]), float(l[4]), float(l[5])])
+        data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+#with open('grid_data3.1.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        alph_list.append(float(l[0]))
+#        beta_list.append(log10(float(l[1])))
+#        a_list.append(float(l[2]))
+#        e_list.append(float(l[3]))
+##        E_list.append(float(l[4]))
+##        th_list.append(float(l[5]))
+#        data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+
 
 #alph_list=array(alph_list)
 #beta_list=array(beta_list)
@@ -73,7 +97,8 @@ with open('data2.csv') as f:
 #th_list=array(th_list)
         
 
-
+lattice_points = array(sorted(lattice_points, key=lambda x: x[0]))
+lattice_points = array(sorted(lattice_points, key=lambda x: x[1]))
 
 data_points=array(data_points)  
 #i=0    
@@ -91,7 +116,7 @@ alph_uniq=list(set(alph_lattice))
 alph_uniq.sort()
 beta_uniq=list(set(beta_lattice))
 beta_uniq.sort()
-beta_uniq = [ round(elem, 2) for elem in beta_uniq ]
+#beta_uniq = [ round(elem, 2) for elem in beta_uniq ]
 
 
 def Bilint(x, y ,points):
@@ -308,12 +333,12 @@ def interpolate(beta, alpha):
 Compare interpolation to simulation at random points
 '''
 #e_int=[]
-#e_sim=[]
+##e_sim=[]
 #a_int=[]
-#a_sim=[]
+##a_sim=[]
 #alph_plot=[]
 #beta_plot=[]
-#for i in range(1000):
+#for i in range(10):
 #    
 #    beta=random.uniform(-1, 4)
 #    alpha=random.uniform(0.1, 0.95)
@@ -324,65 +349,115 @@ Compare interpolation to simulation at random points
 #        e_int.append(f[1])
 #        alph_plot.append(alpha)
 #        beta_plot.append(beta)
-#        sim=TP.TestParticle(alpha=alpha, beta=10**beta)
-#        sim.runrk4()
-#        a_sim.append(log10(sim.GetA()))
+#        #sim=TP.TestParticle(alpha=alpha, beta=10**beta)
+#        #sim.runrk4()
+#        #a_sim.append(log10(sim.GetA()))
 #
 #plt.figure()
 #plt.ymin=0
 #plt.ymax=1
 #plt.xmin=-1
 #plt.xmax=4
-#plt.scatter(beta_plot, alph_plot, c=array(a_int)/array(a_sim))
+#plt.scatter(beta_plot, alph_plot)#, c=array(a_int)/array(a_sim))
 #plt.xlabel(r'$\log\beta$')
 #plt.ylabel(r'$\alpha$')
 #plt.colorbar(label='(a_interpolated/a_simulated)')
 #plt.show()
 '''
-Make contour plots
+Error Check
 '''
+#
+beta_list=arange(min(beta_uniq), max(beta_uniq), 0.5)
+alph_list=arange(min(alph_uniq), max(alph_uniq), 0.2)
 
-x=linspace(-1, 4, 1000)
-y=linspace(0.1, 0.95, 1000)
-za=[]
-ze=[]
-for i in x:
-    zya=[]
-    zye=[]
-    for j in y:
-        z=interpolate(i, j)
-        zya.append(z[0])
-        zye.append(z[1])
-    za.append(zya)
-    ze.append(zye)
-za=array(za)
-ze=array(ze)
+f1 = plt.figure()
+f2 = plt.figure()
+ax1 = f1.add_subplot(111)
+f1.subplots_adjust(right=0.65)
+ax2 = f2.add_subplot(111)
+f2.subplots_adjust(right=0.65)
+ax1.grid()
+ax2.grid()
+for i in range(5):
+    a=random.uniform(min(alph_uniq), max(alph_uniq))
+    
+    a_plot=[]
+    e_plot=[]
+    bint=linspace(min(beta_uniq), max(beta_uniq), 100)
+    for b in bint:
+        h=interpolate(b, a)
+        a_plot.append(h[0])
+        e_plot.append(h[1])
+    ax1.plot(bint, a_plot,'.-', label=r'$\alpha$={}'.format(a))
+    ax2.plot(bint, e_plot,'.-', label=r'$\alpha$={}'.format(a))
+    
+    a_sim=[]
+    e_sim=[]
+    beta_e=[]
+    for b in beta_list:
+        ex=TP.TestParticle(alpha=a, beta=10**b)
+        ex.runrk4()
+        a_sim.append(log10(ex.GetA()))
+        if ex.GetEc()<1:
+            e_sim.append(ex.GetEc())
+            beta_e.append(b)
+    ax1.plot(beta_list, a_sim,'o', label=r'$\alpha$={}'.format(a))
+    ax2.plot(beta_e, e_sim,'o', label=r'$\alpha$={}'.format(a))
+ax1.set_ylabel(r'$a$')
+ax1.set_xlabel(r'$\log\beta$')
+ax2.set_ylabel(r'$e$')
+ax2.set_xlabel(r'$\log\beta$')
+ax1.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
+ax2.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
 
-plt.figure()
-plt.xlabel(r'$\log\beta$')
-plt.ylabel(r'$\alpha$')
-#plt.scatter(beta_list, alph_list, c=a_list,vmin=0, vmax=6)
-#plt.colorbar(label=r'$\loga_data$')
-plt.imshow(za.T,vmin=0, vmax=6, extent=(min(x), max(x), min(y), max(y)), origin='lower', aspect='auto')
-plt.colorbar(label=r'$\loga_in$')
-plt.contour(za.T, extent=(min(x), max(x), min(y), max(y)))
 plt.show()
 
-plt.figure()
-plt.xlabel(r'$\log\beta$')
-plt.ylabel(r'$\alpha$')
-#plt.scatter(beta_list, alph_list, c=e_list,vmin=0, vmax=1)
-#plt.colorbar(label=r'$e_data$')
-plt.imshow(ze.T,vmin=0, vmax=1, extent=(min(x), max(x), min(y), max(y)), origin='lower', aspect='auto')
-plt.colorbar(label=r'$e_int$')
-plt.contour(ze.T, extent=(min(x), max(x), min(y), max(y)))
+f1 = plt.figure()
+f2 = plt.figure()
+ax1 = f1.add_subplot(111)
+f1.subplots_adjust(right=0.65)
+ax2 = f2.add_subplot(111)
+f2.subplots_adjust(right=0.65)
+ax1.grid()
+ax2.grid()
+for i in range(5):
+    b=random.uniform(min(beta_uniq), max(beta_uniq))
+    
+    a_plot=[]
+    e_plot=[]
+    aint=linspace(min(alph_uniq), max(alph_uniq), 100)
+    for a in aint:
+        h=interpolate(b, a)
+        a_plot.append(h[0])
+        e_plot.append(h[1])
+    ax1.plot(aint, a_plot,'.-', label=r'$\log\beta$={}'.format(b))
+    ax2.plot(aint, e_plot,'.-', label=r'$\log\beta$={}'.format(b))
+    
+    a_sim=[]
+    e_sim=[]
+    alph_e=[]
+    for a in alph_list:
+        ex=TP.TestParticle(alpha=a, beta=10**b)
+        ex.runrk4()
+        a_sim.append(log10(ex.GetA()))
+        if ex.GetEc()<1:
+            e_sim.append(ex.GetEc())
+            alph_e.append(a)
+    ax1.plot(alph_list, a_sim,'o', label=r'$\log\beta$={}'.format(b))
+    ax2.plot(alph_e, e_sim,'o', label=r'$\log\beta$={}'.format(b))
+ax1.set_ylabel(r'$a$')
+ax1.set_xlabel(r'$\alpha$')
+ax2.set_ylabel(r'$e$')
+ax2.set_xlabel(r'$\alpha$')
+ax1.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
+ax2.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
 plt.show()
 
 '''
 troubleshoot
 '''
 
-#interpolate(-1, 0.125551102204)
+#interpolate(3.0303030303, 0.4934556214410667)
 
 
 

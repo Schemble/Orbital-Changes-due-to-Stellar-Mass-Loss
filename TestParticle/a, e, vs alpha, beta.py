@@ -12,10 +12,11 @@ from matplotlib import pyplot as plt
 from scipy.stats import linregress
 
 fixed_beta=10**(arange(3.25, 4.25, 0.25))
-fixed_alpha=arange(0.05,1,0.05)
+fixed_beta=[10**4]
+fixed_alpha=arange(0.01,1,0.01)
 i=0
-b=fixed_beta[0]
-b_max=fixed_beta[1]
+#b=fixed_beta[0]
+#b_max=fixed_beta[1]
 alph=fixed_alpha[0]
 alph_list=[]
 beta_list=[]
@@ -41,7 +42,7 @@ for alph in fixed_alpha:
             ex.runrk4()
             Gather(ex)
             print(alph, b)
-with open('grid_data3.1.csv', 'w') as f:
+with open('grid_data3.2.csv', 'w') as f:
     for i in range(len(alph_list)):
         out_string=''
         out_string+=str(alph_list[i])

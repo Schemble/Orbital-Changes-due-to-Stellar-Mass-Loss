@@ -79,18 +79,19 @@ def analyticalEapo(alpha, e):
 #
 #
 #
-#e_list=arange(0.1, 1, 0.2)
+#e_list=arange(0.1, 1, 0.1)
 ##alpha_crit=findx(0)
 #
 #fig=plt.figure()
 #ax = fig.add_subplot(111)
+#cmap = plt.get_cmap('jet')
 ##plt.plot(x_fit, y_fit , [0,1], [0,0], 'g--', alpha, Etot, '.')
 ##plt.plot(alpha_crit, 0, 'ro', label=r'$\alpha_{crit}$'+'={:.1f}'.format(alpha_crit))
 #for e in e_list[::-1]:
-#    plt.plot(linspace(0, 1), analyticalEper(linspace(0, 1), e),'--', label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(e, (1-e)/2))
+#    plt.plot(linspace(0, 1), analyticalEper(linspace(0, 1), e),'--',c=cmap(e))
 #plt.plot(linspace(0, 1), analyticalEapo(linspace(0, 1), 0),'b',label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(0, 1/2))
 #for e in e_list:
-#    plt.plot(linspace(0, 1), analyticalEapo(linspace(0, 1), e),'--' ,label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(e, (1+e)/2))
+#    plt.plot(linspace(0, 1), analyticalEapo(linspace(0, 1), e),'--',c=cmap(e), label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(e, (1-e)/2))
 #fig.legend(bbox_to_anchor=(1, 0.85), loc='upper right', ncol=1)
 ##plt.tight_layout(rect=[0,0,0.75,1])
 #plt.xlabel(r'$\alpha$')
@@ -197,76 +198,77 @@ alph=linspace(0, 0.5)
 #plt.grid()
 #plt.show()
 
-#e_list=arange(0.1, 1, 0.2)
-##alpha_crit=findx(0)
-#
-#fig=plt.figure()
-#ax = fig.add_subplot(111)
-##plt.plot(x_fit, y_fit , [0,1], [0,0], 'g--', alpha, Etot, '.')
-##plt.plot(alpha_crit, 0, 'ro', label=r'$\alpha_{crit}$'+'={:.1f}'.format(alpha_crit))
-#for e in e_list[::-1]:
-#    ac=(1-e)/2
-#    plt.plot(linspace(0, ac, 100)[:-1], analyticalAperi(linspace(0, ac, 100)[:-1], e),'--', label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(e, ac))
-#plt.plot(linspace(0, 0.5, 100), analyticalAperi(linspace(0, 0.5, 100), 0),'b',label=r'$e_0=0.0$, $\alpha_c=0.5$')
-#for e in e_list:
-#    ac=(1+e)/2
-#    plt.plot(linspace(0, ac, 1100)[:-1], analyticalAapo(linspace(0, ac, 1100)[:-1], e),'--' ,label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(e, ac))
-#fig.legend(bbox_to_anchor=(1, 0.85), loc='upper right', ncol=1)
-##plt.tight_layout(rect=[0,0,0.75,1])
-#plt.xlabel(r'$\alpha$')
-#plt.ylabel(r'$\frac{a}{a_0}$')
-#plt.xticks(arange(0, 1.1, 0.1))
-#plt.xlim(xmin=0, xmax=1)
-#plt.ylim(ymin=0,ymax=30)
-#plt.subplots_adjust(right=0.7, bottom=0.3)
-#ax.grid()
-##plt.savefig('Figures/Testparticle/TP_Etot_vs_a_acrit.png')
-#plt.show()
+e_list=arange(0.1, 1, 0.1)
+#alpha_crit=findx(0)
 
-#e_list=arange(0.1, 1, 0.2)
-#
-#fig=plt.figure()
-#ax = fig.add_subplot(111)
-##plt.plot(x_fit, y_fit , [0,1], [0,0], 'g--', alpha, Etot, '.')
-##plt.plot(alpha_crit, 0, 'ro', label=r'$\alpha_{crit}$'+'={:.1f}'.format(alpha_crit))
-#for e in e_list[::-1]:
-#    ac=(1-e)/2
-#    plt.plot(linspace(0, ac, 100)[:-1], analyticaleccPeri(linspace(0, ac, 100)[:-1], e),'--', label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(e, ac))
-#plt.plot(linspace(0, 0.5), analyticaleccPeri(linspace(0, 0.5), 0),'b',label=r'$e_0=0.0$, $\alpha_c=0.5$')
-#for e in e_list:
-#    ac=(1+e)/2
-#    plt.plot(linspace(0, ac, 10000)[:-1], analyticaleccApo(linspace(0, ac, 10000)[:-1], e),'--' ,label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(e, ac))
-#fig.legend(bbox_to_anchor=(1, 0.85), loc='upper right', ncol=1)
-##plt.tight_layout(rect=[0,0,0.75,1])
-#plt.xlabel(r'$\alpha$')
-#plt.ylabel(r'$e$')
-#plt.xticks(arange(0, 1.1, 0.1))
-#plt.xlim(xmin=0, xmax=1)
-#plt.ylim(ymin=0,ymax=1)
-#plt.subplots_adjust(right=0.7, bottom=0.3)
-#ax.grid()
-##plt.savefig('Figures/Testparticle/TP_Etot_vs_a_acrit.png')
-#plt.show()
+fig=plt.figure()
+ax = fig.add_subplot(111)
+cmap = plt.get_cmap('jet')
+#plt.plot(x_fit, y_fit , [0,1], [0,0], 'g--', alpha, Etot, '.')
+#plt.plot(alpha_crit, 0, 'ro', label=r'$\alpha_{crit}$'+'={:.1f}'.format(alpha_crit))
+for e in e_list[::-1]:
+    ac=(1-e)/2
+    plt.plot(linspace(0, ac, 100)[:-1], analyticalAperi(linspace(0, ac, 100)[:-1], e),'--',c=cmap(e))
+plt.plot(linspace(0, 0.5, 100), analyticalAperi(linspace(0, 0.5, 100), 0),'b',label=r'$e_0=0.0$, $\alpha_c=0.5$')
+for e in e_list:
+    ac=(1+e)/2
+    plt.plot(linspace(0, ac, 1100)[:-1], analyticalAapo(linspace(0, ac, 1100)[:-1], e),'--',c=cmap(e) ,label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(e, ac))
+fig.legend(bbox_to_anchor=(1, 0.85), loc='upper right', ncol=1)
+#plt.tight_layout(rect=[0,0,0.75,1])
+plt.xlabel(r'$\alpha$')
+plt.ylabel(r'$\frac{a}{a_0}$')
+plt.xticks(arange(0, 1.1, 0.1))
+plt.xlim(xmin=0, xmax=1)
+plt.ylim(ymin=0,ymax=30)
+plt.subplots_adjust(right=0.7, bottom=0.3)
+ax.grid()
+#plt.savefig('Figures/Testparticle/TP_Etot_vs_a_acrit.png')
+plt.show()
+
+
+fig=plt.figure()
+ax = fig.add_subplot(111)
+cmap = plt.get_cmap('jet')
+#plt.plot(x_fit, y_fit , [0,1], [0,0], 'g--', alpha, Etot, '.')
+#plt.plot(alpha_crit, 0, 'ro', label=r'$\alpha_{crit}$'+'={:.1f}'.format(alpha_crit))
+for e in e_list[::-1]:
+    ac=(1-e)/2
+    plt.plot(linspace(0, ac, 100)[:-1], analyticaleccPeri(linspace(0, ac, 100)[:-1], e),'--',c=cmap(e))
+plt.plot(linspace(0, 0.5), analyticaleccPeri(linspace(0, 0.5), 0),'b',label=r'$e_0=0.0$, $\alpha_c=0.5$')
+for e in e_list:
+    ac=(1+e)/2
+    plt.plot(linspace(0, ac, 10000)[:-1], analyticaleccApo(linspace(0, ac, 10000)[:-1], e),'--',c=cmap(e) ,label=r'$e_0={:.1f}$, $\alpha_c={:.2f}$'.format(e, ac))
+fig.legend(bbox_to_anchor=(1, 0.85), loc='upper right', ncol=1)
+#plt.tight_layout(rect=[0,0,0.75,1])
+plt.xlabel(r'$\alpha$')
+plt.ylabel(r'$e$')
+plt.xticks(arange(0, 1.1, 0.1))
+plt.xlim(xmin=0, xmax=1)
+plt.ylim(ymin=0,ymax=1)
+plt.subplots_adjust(right=0.7, bottom=0.3)
+ax.grid()
+#plt.savefig('Figures/Testparticle/TP_Etot_vs_a_acrit.png')
+plt.show()
 
 '''
 beta=inf
 '''
-
-def analyticalA(alpha):
-    return 1/(1-alpha)
-
-fig=plt.figure()
-ax = fig.add_subplot(111)
-plt.plot(linspace(0, 1, 150), analyticalA(linspace(0, 1, 150)))
-#fig.legend(bbox_to_anchor=(1, 0.85), loc='upper right', ncol=1)
-plt.xlabel(r'$\alpha$')
-plt.ylabel(r'$a$')
-plt.xticks(arange(0, 1.1, 0.1))
-plt.xlim(xmin=0, xmax=1)
-plt.ylim(ymin=0, ymax=100)
-#plt.subplots_adjust(right=0.7, bottom=0.3)
-ax.grid()
-#plt.savefig('Figures/Testparticle/TP_Etot_vs_a_acrit.png')
-plt.show()
+#
+#def analyticalA(alpha):
+#    return 1/(1-alpha)
+#
+#fig=plt.figure()
+#ax = fig.add_subplot(111)
+#plt.plot(linspace(0, 1, 150), analyticalA(linspace(0, 1, 150)))
+##fig.legend(bbox_to_anchor=(1, 0.85), loc='upper right', ncol=1)
+#plt.xlabel(r'$\alpha$')
+#plt.ylabel(r'$a$')
+#plt.xticks(arange(0, 1.1, 0.1))
+#plt.xlim(xmin=0, xmax=1)
+#plt.ylim(ymin=0, ymax=100)
+##plt.subplots_adjust(right=0.7, bottom=0.3)
+#ax.grid()
+##plt.savefig('Figures/Testparticle/TP_Etot_vs_a_acrit.png')
+#plt.show()
 
 

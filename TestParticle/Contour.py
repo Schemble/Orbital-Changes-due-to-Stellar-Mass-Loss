@@ -10,7 +10,7 @@ from scipy import *
 from matplotlib import pyplot as plt
 from scipy.stats import linregress
 import TestParticle as TP
-'''
+
 alph_list=[]
 beta_list=[]
 a_list=[]
@@ -19,18 +19,6 @@ E_list=[]
 th_list=[]
 
 data_points=[]
-
-with open('grid_data.csv') as f:
-    for line in f.readlines():
-        l=line.split(',')
-        #alph_list.append(float(l[0]))
-        #beta_list.append(float(l[1]))
-        #a_list.append(float(l[2]))
-        #e_list.append(float(l[3]))
-#        E_list.append(float(l[4]))
-#        th_list.append(float(l[5]))
-        data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
-
 
 with open('grid_data2.csv') as f:
     for line in f.readlines():
@@ -42,18 +30,78 @@ with open('grid_data2.csv') as f:
 #        E_list.append(float(l[4]))
 #        th_list.append(float(l[5]))
         data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+
+
+
+
+#with open('grid_data3.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        #alph_list.append(float(l[0]))
+#        #beta_list.append(float(l[1]))
+#        #a_list.append(float(l[2]))
+#        #e_list.append(float(l[3]))
+##        E_list.append(float(l[4]))
+##        th_list.append(float(l[5]))
+#        data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+
+
+#with open('grid_data3.1.csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        #alph_list.append(float(l[0]))
+#        #beta_list.append(float(l[1]))
+#        #a_list.append(float(l[2]))
+#        #e_list.append(float(l[3]))
+##        E_list.append(float(l[4]))
+##        th_list.append(float(l[5]))
+#        data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+#with open('extra_e_data2(4).csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        #alph_list.append(float(l[0]))
+#        #beta_list.append(float(l[1]))
+#        #a_list.append(float(l[2]))
+#        #e_list.append(float(l[3]))
+##        E_list.append(float(l[4]))
+##        th_list.append(float(l[5]))
+#        data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+#with open('extra2_a_data(4).csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        #alph_list.append(float(l[0]))
+#        #beta_list.append(float(l[1]))
+#        #a_list.append(float(l[2]))
+#        #e_list.append(float(l[3]))
+##        E_list.append(float(l[4]))
+##        th_list.append(float(l[5]))
+#        data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+#with open('extra_a_data(4).csv') as f:
+#    for line in f.readlines():
+#        l=line.split(',')
+#        #alph_list.append(float(l[0]))
+#        #beta_list.append(float(l[1]))
+#        #a_list.append(float(l[2]))
+#        #e_list.append(float(l[3]))
+##        E_list.append(float(l[4]))
+##        th_list.append(float(l[5]))
+#        data_points.append([float(l[0]), log10(float(l[1])), log10(float(l[2])), float(l[3]), float(l[4]), float(l[5])])
+
+
 data_points=array(data_points) 
+
 #alph_list=array(alph_list)
 #beta_list=array(beta_list)
-
 data_points = array(sorted(data_points, key=lambda x: x[0]))
 data_points = array(sorted(data_points, key=lambda x: x[1]))
 i=0
 while i+1 <len(data_points):
     if all(data_points[i, :2]==data_points[i+1,:2]):
        data_points=delete(data_points, i, 0)
+       
     elif all(data_points[i,0]!=data_points[i+1:,0]) and all(data_points[i,1]!=data_points[i+1:,1]):
         data_points=delete(data_points, i, 0)
+        
     i+=1
 alph_list=data_points[:,0]
 beta_list=data_points[:,1]    
@@ -62,7 +110,7 @@ alph_uniq.sort()
 beta_uniq=list(set(beta_list))
 beta_uniq.sort()
 #beta_uniq = [ round(elem, 2) for elem in beta_uniq ]
-'''
+
 def backlinint(value, x1, x2, f1, f2):
     f=value
     return (x1*(f2-f)+x2*(f-f1))/(f2-f1)
@@ -110,7 +158,7 @@ def contour(value, idx):
             y_grid.append(alph)
 
     return alpha, beta, x_grid, y_grid
-'''
+
 #alpha_plot, beta_plot, x_grid, y_grid, c=contour(0.4, 3)
 e_list=arange(0, 1,0.1)
 #alpha_plot = [x for _,x in sorted(zip(beta_plot,alpha_plot))]
@@ -121,10 +169,11 @@ fig, ax = plt.subplots()
 #ax.xaxis.grid(True)
 #ax.yaxis.grid(True)
 for e in e_list:
-    alpha_plot, beta_plot, x_grid, y_grid, c=contour(e, 3)
+    alpha_plot, beta_plot, x_grid, y_grid=contour(e, 3)
     alpha_plot = [x for _,x in sorted(zip(beta_plot,alpha_plot))]
     beta_plot.sort()
     plt.plot(beta_plot, alpha_plot,'.-', label='e={:.1f}'.format(e))
+    print(len(beta_plot))
 plt.grid()
 plt.ylabel(r'$\alpha$')
 plt.xlabel(r'$\log\beta$')
@@ -141,23 +190,23 @@ fig, ax = plt.subplots()
 #ax.xaxis.grid(True)
 #ax.yaxis.grid(True)
 for a in a_list:
-    alpha_plot, beta_plot, x_grid, y_grid, c=contour(a, 2)
+    alpha_plot, beta_plot, x_grid, y_grid=contour(a, 2)
     alpha_plot = [x for _,x in sorted(zip(beta_plot,alpha_plot))]
     beta_plot.sort()
     plt.plot(beta_plot, alpha_plot,'.-', label='a={:.2f}'.format(a))
+    print(len(beta_plot))
 plt.grid()
 plt.ylabel(r'$\alpha$')
 plt.xlabel(r'$\log\beta$')
 plt.legend()
 plt.show()
-'''
 
 
 
 
 
-'''
-'''
+
+
 def backlinint(value, x1, x2, f1, f2):
 
     f=value
@@ -178,12 +227,12 @@ def linint(x, y, points):
         f=(f1*(x2-x)+f2*(x-x1))/(x2-x1)
     return f
 def Bilint(x, y ,points):
-    '''
-    points=[[x11, y11, f11], 
-            [x12, y12, f12], 
-            [x21, y21, f21], 
-            [x22, y22, f22]]   
-    '''
+    
+#    points=[[x11, y11, f11], 
+#            [x12, y12, f12], 
+#            [x21, y21, f21], 
+#            [x22, y22, f22]]   
+    
     points = sorted(points, key=lambda x: x[0])
     points = sorted(points, key=lambda x: x[1])
     
@@ -237,3 +286,7 @@ def Bilint(x, y ,points):
         Q2=(f12*(y22-y)+f22*(y-y12))/(y22-y12)
         f=(Q1*(x2-x)+Q2*(x-x1))/(x2-x1)
     return f
+
+
+
+
