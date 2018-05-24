@@ -141,7 +141,6 @@ def Bilint(x, y ,points):
     x22=points[3][1]
     y22=points[3][0]
     f22=array(points[3][2:])
-    #print(x11, y11)
     if any(f11==inf) or any(f12==inf) or any(f21==inf) or any(f22==inf):
         return [inf, inf]
     if x11==x and y11==y:
@@ -152,7 +151,7 @@ def Bilint(x, y ,points):
         return f21
     if x22==x and y22==y:
         return f22
-    
+
     if (y11==y21 and y12==y22):
         
         y1=y11
@@ -183,15 +182,24 @@ def interpolate(beta, alpha):
     '''
     find the lattice values closest to point
     '''
-    print(beta, alpha)
+#    print(beta, alpha)
     bdiff=abs(array(beta_uniq)-beta)
     b1=beta_uniq[argmin(bdiff)]
-    b2=beta_uniq[int(where(bdiff==sort(bdiff)[1])[0])]
+
+    if len(where(bdiff==sort(bdiff)[1])[0])>1:
+        b2=beta_uniq[int(where(bdiff==sort(bdiff)[1])[0][1])]
+    elif len(where(bdiff==sort(bdiff)[1])[0])==1:
+        b2=beta_uniq[int(where(bdiff==sort(bdiff)[1])[0])]
     blim=[b1, b2]
     blim.sort()
     adiff=abs(array(alph_uniq)-alpha)
+
     a1=alph_uniq[argmin(adiff)]
-    a2=alph_uniq[int(where(adiff==sort(adiff)[1])[0])]
+    if len(where(adiff==sort(adiff)[1])[0])>1:
+        a2=alph_uniq[int(where(adiff==sort(adiff)[1])[0][1])]
+    elif len(where(adiff==sort(adiff)[1])[0])==1:
+        a2=alph_uniq[int(where(adiff==sort(adiff)[1])[0])]
+
     alim=[a1, a2]
     alim.sort()
     '''
@@ -367,91 +375,91 @@ Compare interpolation to simulation at random points
 Error Check
 '''
 #
-beta_list=arange(min(beta_uniq), max(beta_uniq), 0.5)
-alph_list=arange(min(alph_uniq), max(alph_uniq), 0.2)
-
-f1 = plt.figure()
-f2 = plt.figure()
-ax1 = f1.add_subplot(111)
-f1.subplots_adjust(right=0.65)
-ax2 = f2.add_subplot(111)
-f2.subplots_adjust(right=0.65)
-ax1.grid()
-ax2.grid()
-for i in range(5):
-    a=random.uniform(min(alph_uniq), max(alph_uniq))
-    
-    a_plot=[]
-    e_plot=[]
-    bint=linspace(min(beta_uniq), max(beta_uniq), 100)
-    for b in bint:
-        h=interpolate(b, a)
-        a_plot.append(h[0])
-        e_plot.append(h[1])
-    ax1.plot(bint, a_plot,'.-', label=r'$\alpha$={}'.format(a))
-    ax2.plot(bint, e_plot,'.-', label=r'$\alpha$={}'.format(a))
-    
-    a_sim=[]
-    e_sim=[]
-    beta_e=[]
-    for b in beta_list:
-        ex=TP.TestParticle(alpha=a, beta=10**b)
-        ex.runrk4()
-        a_sim.append(log10(ex.GetA()))
-        if ex.GetEc()<1:
-            e_sim.append(ex.GetEc())
-            beta_e.append(b)
-    ax1.plot(beta_list, a_sim,'o', label=r'$\alpha$={}'.format(a))
-    ax2.plot(beta_e, e_sim,'o', label=r'$\alpha$={}'.format(a))
-ax1.set_ylabel(r'$a$')
-ax1.set_xlabel(r'$\log\beta$')
-ax2.set_ylabel(r'$e$')
-ax2.set_xlabel(r'$\log\beta$')
-ax1.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
-ax2.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
-
-plt.show()
-
-f1 = plt.figure()
-f2 = plt.figure()
-ax1 = f1.add_subplot(111)
-f1.subplots_adjust(right=0.65)
-ax2 = f2.add_subplot(111)
-f2.subplots_adjust(right=0.65)
-ax1.grid()
-ax2.grid()
-for i in range(5):
-    b=random.uniform(min(beta_uniq), max(beta_uniq))
-    
-    a_plot=[]
-    e_plot=[]
-    aint=linspace(min(alph_uniq), max(alph_uniq), 100)
-    for a in aint:
-        h=interpolate(b, a)
-        a_plot.append(h[0])
-        e_plot.append(h[1])
-    ax1.plot(aint, a_plot,'.-', label=r'$\log\beta$={}'.format(b))
-    ax2.plot(aint, e_plot,'.-', label=r'$\log\beta$={}'.format(b))
-    
-    a_sim=[]
-    e_sim=[]
-    alph_e=[]
-    for a in alph_list:
-        ex=TP.TestParticle(alpha=a, beta=10**b)
-        ex.runrk4()
-        a_sim.append(log10(ex.GetA()))
-        if ex.GetEc()<1:
-            e_sim.append(ex.GetEc())
-            alph_e.append(a)
-    ax1.plot(alph_list, a_sim,'o', label=r'$\log\beta$={}'.format(b))
-    ax2.plot(alph_e, e_sim,'o', label=r'$\log\beta$={}'.format(b))
-ax1.set_ylabel(r'$a$')
-ax1.set_xlabel(r'$\alpha$')
-ax2.set_ylabel(r'$e$')
-ax2.set_xlabel(r'$\alpha$')
-ax1.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
-ax2.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
-plt.show()
+#beta_list=arange(min(beta_uniq), max(beta_uniq), 0.5)
+#alph_list=arange(min(alph_uniq), max(alph_uniq), 0.2)
+#
+#f1 = plt.figure()
+#f2 = plt.figure()
+#ax1 = f1.add_subplot(111)
+#f1.subplots_adjust(right=0.65)
+#ax2 = f2.add_subplot(111)
+#f2.subplots_adjust(right=0.65)
+#ax1.grid()
+#ax2.grid()
+#for i in range(5):
+#    a=random.uniform(min(alph_uniq), max(alph_uniq))
+#    
+#    a_plot=[]
+#    e_plot=[]
+#    bint=linspace(min(beta_uniq), max(beta_uniq), 100)
+#    for b in bint:
+#        h=interpolate(b, a)
+#        a_plot.append(h[0])
+#        e_plot.append(h[1])
+#    ax1.plot(bint, a_plot,'.-', label=r'$\alpha$={}'.format(a))
+#    ax2.plot(bint, e_plot,'.-', label=r'$\alpha$={}'.format(a))
+#    
+#    a_sim=[]
+#    e_sim=[]
+#    beta_e=[]
+#    for b in beta_list:
+#        ex=TP.TestParticle(alpha=a, beta=10**b)
+#        ex.runrk4()
+#        a_sim.append(log10(ex.GetA()))
+#        if ex.GetEc()<1:
+#            e_sim.append(ex.GetEc())
+#            beta_e.append(b)
+#    ax1.plot(beta_list, a_sim,'o', label=r'$\alpha$={}'.format(a))
+#    ax2.plot(beta_e, e_sim,'o', label=r'$\alpha$={}'.format(a))
+#ax1.set_ylabel(r'$a$')
+#ax1.set_xlabel(r'$\log\beta$')
+#ax2.set_ylabel(r'$e$')
+#ax2.set_xlabel(r'$\log\beta$')
+#ax1.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
+#ax2.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
+#
+#plt.show()
+#
+#f1 = plt.figure()
+#f2 = plt.figure()
+#ax1 = f1.add_subplot(111)
+#f1.subplots_adjust(right=0.65)
+#ax2 = f2.add_subplot(111)
+#f2.subplots_adjust(right=0.65)
+#ax1.grid()
+#ax2.grid()
+#for i in range(5):
+#    b=random.uniform(min(beta_uniq), max(beta_uniq))
+#    
+#    a_plot=[]
+#    e_plot=[]
+#    aint=linspace(min(alph_uniq), max(alph_uniq), 100)
+#    for a in aint:
+#        h=interpolate(b, a)
+#        a_plot.append(h[0])
+#        e_plot.append(h[1])
+#    ax1.plot(aint, a_plot,'.-', label=r'$\log\beta$={}'.format(b))
+#    ax2.plot(aint, e_plot,'.-', label=r'$\log\beta$={}'.format(b))
+#    
+#    a_sim=[]
+#    e_sim=[]
+#    alph_e=[]
+#    for a in alph_list:
+#        ex=TP.TestParticle(alpha=a, beta=10**b)
+#        ex.runrk4()
+#        a_sim.append(log10(ex.GetA()))
+#        if ex.GetEc()<1:
+#            e_sim.append(ex.GetEc())
+#            alph_e.append(a)
+#    ax1.plot(alph_list, a_sim,'o', label=r'$\log\beta$={}'.format(b))
+#    ax2.plot(alph_e, e_sim,'o', label=r'$\log\beta$={}'.format(b))
+#ax1.set_ylabel(r'$a$')
+#ax1.set_xlabel(r'$\alpha$')
+#ax2.set_ylabel(r'$e$')
+#ax2.set_xlabel(r'$\alpha$')
+#ax1.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
+#ax2.legend(bbox_to_anchor=(1, 0.89), loc='upper left', ncol=1)
+#plt.show()
 
 '''
 troubleshoot
@@ -460,8 +468,32 @@ troubleshoot
 #interpolate(3.0303030303, 0.4934556214410667)
 
 
+'''
+Discussion
+'''
 
 
+beta_plot=linspace(min(beta_uniq),max(beta_uniq))
+mi=arange(1, 4, 0.2)
+ai=1
+mf=0.6
+plt.figure()
+plt.grid()
+for m in mi:
+    e_plot=[]
+    alpha=1-mf/m
+    if alpha>0.5 and alpha<max(alph_uniq):
+        
+        print(alpha)
+        for b in beta_plot:            
+            f=interpolate(b, alpha)
+            e_plot.append(f[1])
+        t_plot=sqrt((ai**3)/m)*10**beta_plot
+        plt.plot(log10(t_plot), e_plot, label='{}'.format(m))
+plt.legend()
+plt.ylabel(r'$e$')
+plt.xlabel(r't')
+plt.show() 
 
 
 

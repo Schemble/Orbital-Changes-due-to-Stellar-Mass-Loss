@@ -10,6 +10,7 @@ import TestParticle as TP
 from scipy import*
 from matplotlib import pyplot as plt
 from scipy.stats import linregress
+import time
 
 fixed_beta=10**(arange(3.25, 4.25, 0.25))
 fixed_beta=[10**4]
@@ -31,7 +32,7 @@ def Gather(f):
     th_list.append(f.Theta())
     alph_list.append(f.alpha)
     beta_list.append(f.beta)
-    
+ti=time.time()
 for alph in fixed_alpha:
     b=fixed_beta[0]
     ex=TP.TestParticle(alpha=alph, beta=b)
@@ -41,7 +42,7 @@ for alph in fixed_alpha:
             ex=TP.TestParticle(alpha=alph, beta=b)
             ex.runrk4()
             Gather(ex)
-            print(alph, b)
+            print(alph, b, time.time()-ti)
 with open('grid_data3.2.csv', 'w') as f:
     for i in range(len(alph_list)):
         out_string=''
